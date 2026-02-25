@@ -1,0 +1,82 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+
+import { cows } from "../../data/cows.js";
+
+export function getStaticPaths(){
+
+return cows.map(cow => ({
+
+params: { slug: cow.slug },
+
+props: { cow }
+
+}));
+
+}
+
+const { cow } = Astro.props;
+---
+
+<MainLayout title={cow.name}>
+
+<section class="section">
+
+<div class="container">
+
+<div class="grid">
+
+<div>
+
+<img
+src={cow.image}
+style="width:100%; border-radius:12px;">
+
+</div>
+
+
+<div>
+
+<h1>
+{cow.name}
+</h1>
+
+<p>
+Age: {cow.age}
+</p>
+
+<p>
+Breed: {cow.breed}
+</p>
+
+<p>
+Status: {cow.status}
+</p>
+
+<br>
+
+<p>
+{cow.story}
+</p>
+
+<br>
+
+<a
+href="https://rzp.io/l/abc123"
+target="_blank"
+class="btn btn-primary">
+
+Sponsor this Cow
+
+</a>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+</MainLayout>

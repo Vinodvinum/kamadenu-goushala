@@ -1,0 +1,1578 @@
+Perfect. We’ll now move from a static website → real production platform step-by-step.
+No rush. We’ll do this in phases, and I’ll clearly mark where each file goes.
+
+
+---
+
+🧭 Upgrade Roadmap (Production Phase)
+
+We’ll cover these in order:
+
+PHASE 1  Razorpay payments integration
+PHASE 2  Individual cow detail pages
+PHASE 3  Individual blog detail pages
+PHASE 4  Simple admin panel (no database first)
+PHASE 5  Deployment (Netlify / Vercel)
+
+We start with PHASE 1.
+
+
+---
+
+🟢 PHASE 1 — Razorpay Payment Integration
+
+Goal: when user clicks Donate, it opens real payment page.
+
+There are 2 methods:
+
+1. Payment Link (EASIEST, recommended now)
+
+
+2. Full Razorpay Checkout integration (advanced)
+
+
+
+We’ll use Payment Link first.
+
+
+---
+
+STEP 1.1 — Create Razorpay account
+
+Go to:
+
+https://razorpay.com
+
+Create account → complete KYC.
+
+Then go to:
+
+Dashboard → Payment Links → Create Link
+
+Example:
+
+Title: Feed a Cow
+Amount: ₹501
+
+Razorpay gives link like:
+
+https://rzp.io/l/abc123
+
+Copy it.
+
+
+---
+
+STEP 1.2 — Update donate page
+
+📁 File
+
+src/pages/donate.astro
+
+Find:
+
+<a href="#" class="btn btn-primary">
+Donate Now
+</a>
+
+Replace with:
+
+<a
+href="https://rzp.io/l/abc123"
+target="_blank"
+class="btn btn-primary">
+
+Donate Now
+
+</a>
+
+Now clicking opens Razorpay payment.
+
+
+---
+
+STEP 1.3 — Add Razorpay links to Cow adoption
+
+📁 File
+
+src/components/CowCard.astro
+
+Find:
+
+<a href="/donate" class="btn btn-primary">
+Adopt / Sponsor
+</a>
+
+Replace:
+
+<a
+href="https://rzp.io/l/abc123"
+target="_blank"
+class="btn btn-primary">
+
+Sponsor Cow
+
+</a>
+
+
+---
+
+STEP 1.4 — Add payment to Products
+
+📁 File
+
+src/components/ProductCard.astro
+
+Replace WhatsApp button with:
+
+<a
+href="https://rzp.io/l/abc123"
+target="_blank"
+class="btn btn-primary">
+
+Buy Now
+
+</a>
+
+
+---
+
+✅ Result
+
+Now payments work from:
+
+Donate page
+Cow adoption
+Products
+
+No backend needed.
+
+
+---
+
+🟢 PHASE 1 COMPLETE
+
+Your website can now receive real money.
+
+
+---
+
+NEXT: PHASE 2 — Individual Cow Detail Pages
+
+Example:
+
+/cows/lakshmi
+
+Shows:
+
+Photo
+Full story
+Sponsor button
+
+This makes site feel real NGO platform.
+
+We’ll implement using Astro dynamic routes.
+
+
+---
+
+If ready, I’ll give:
+
+STEP 2.1 — Convert cows.js for dynamic routing
+
+Now we start PHASE 2 — Individual Cow Detail Pages 🐄
+This allows pages like:
+
+/cows/lakshmi
+/cows/kamadhenu
+
+Each cow gets its own full profile page, like real goshala adoption platforms.
+
+We’ll do this safely without breaking your current cows page.
+
+
+---
+
+STEP 2.1 — Update cows.js to include slug
+
+Slug = URL name.
+
+📁 File
+
+src/data/cows.js
+
+Replace your file with:
+
+export const cows = [
+
+{
+id: 1,
+
+slug: "lakshmi",
+
+name: "Lakshmi",
+
+age: "7 years",
+
+breed: "Gir",
+
+status: "Rescued",
+
+image: "/images/cows/lakshmi.jpg",
+
+description:
+"Rescued from highway with leg injury. Now healthy and safe.",
+
+story:
+"Lakshmi was found injured on the roadside. Our team rescued her and provided medical care. Today she lives safely in our goshala."
+
+},
+
+{
+id: 2,
+
+slug: "kamadhenu",
+
+name: "Kamadhenu",
+
+age: "5 years",
+
+breed: "Sahiwal",
+
+status: "Healthy",
+
+image: "/images/cows/kamadhenu.jpg",
+
+description:
+"Calm and friendly cow cared daily in our goshala.",
+
+story:
+"Kamadhenu is one of the most peaceful cows in our shelter. She was rescued from abandonment."
+
+},
+
+{
+id: 3,
+
+slug: "ganga",
+
+name: "Ganga",
+
+age: "4 years",
+
+breed: "Desi",
+
+status: "Under Care",
+
+image: "/images/cows/ganga.jpg",
+
+description:
+"Receiving medical care.",
+
+story:
+"Ganga was rescued recently and is recovering under veterinary care."
+
+}
+
+];
+
+
+---
+
+STEP 2.2 — Update CowCard to link to cow page
+
+📁 File
+
+src/components/CowCard.astro
+
+Replace button with:
+
+<a href={`/cows/${cow.slug}`} class="btn btn-outline">
+
+View Details
+
+</a>
+
+Keep sponsor button below if you want.
+
+Example full bottom:
+
+<br>
+
+<a href={`/cows/${cow.slug}`} class="btn btn-outline">
+View Details
+</a>
+
+<a
+href="https://rzp.io/l/abc123"
+target="_blank"
+class="btn btn-primary">
+
+Sponsor Cow
+
+</a>
+
+
+---
+
+STEP 2.3 — Create dynamic cow page
+
+Create folder:
+
+src/pages/cows/
+
+Create file:
+
+src/pages/cows/[slug].astro
+
+
+---
+
+STEP 2.4 — Paste this code
+
+📁 File
+
+src/pages/cows/[slug].astro
+
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+
+import { cows } from "../../data/cows.js";
+
+export function getStaticPaths(){
+
+return cows.map(cow => ({
+
+params: { slug: cow.slug },
+
+props: { cow }
+
+}));
+
+}
+
+const { cow } = Astro.props;
+---
+
+<MainLayout title={cow.name}>
+
+<section class="section">
+
+<div class="container">
+
+<div class="grid">
+
+<div>
+
+<img
+src={cow.image}
+style="width:100%; border-radius:12px;">
+
+</div>
+
+
+<div>
+
+<h1>
+{cow.name}
+</h1>
+
+<p>
+Age: {cow.age}
+</p>
+
+<p>
+Breed: {cow.breed}
+</p>
+
+<p>
+Status: {cow.status}
+</p>
+
+<br>
+
+<p>
+{cow.story}
+</p>
+
+<br>
+
+<a
+href="https://rzp.io/l/abc123"
+target="_blank"
+class="btn btn-primary">
+
+Sponsor this Cow
+
+</a>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+</MainLayout>
+
+
+---
+
+STEP 2.5 — Run and test
+
+npm run dev
+
+Open:
+
+http://localhost:4321/cows
+
+Click:
+
+Lakshmi → opens → /cows/lakshmi
+
+
+---
+
+✅ Result
+
+You now have:
+
+Individual cow pages
+Dynamic routing
+Real adoption profile
+
+Professional NGO behavior.
+
+
+---
+
+📂 Folder coverage update
+
+src/data/cows.js            ✅ UPDATED
+src/components/CowCard.astro✅ UPDATED
+src/pages/cows/[slug].astro ✅ NEW
+
+
+---
+
+PHASE 2 COMPLETE ✅
+
+
+---
+
+NEXT: PHASE 3 — Individual Blog Detail Pages
+
+Example:
+
+/blog/rescue-of-lakshmi
+
+This improves SEO and storytelling.
+
+Ready to proceed.
+
+
+
+Now we start PHASE 3 — Individual Blog Detail Pages 📰
+This lets each blog open as its own page, like:
+
+/blog/rescue-of-injured-cow-lakshmi
+/blog/festival-gau-seva-event
+
+This is important for SEO, storytelling, and professionalism.
+
+We’ll follow the same pattern as cows.
+
+
+---
+
+STEP 3.1 — Update blog.js to include slug and full content
+
+📁 File
+
+src/data/blog.js
+
+Replace with:
+
+export const blogs = [
+
+{
+id: 1,
+
+slug: "rescue-of-lakshmi",
+
+title: "Rescue of Injured Cow Lakshmi",
+
+date: "March 2026",
+
+image: "/images/blog/rescue.jpg",
+
+excerpt:
+"Our team rescued Lakshmi from roadside and provided medical care.",
+
+content:
+"Lakshmi was found injured on a busy road. Our rescue team immediately brought her to Kamadenu Goushala and provided treatment. Today she is healthy and safe thanks to supporters."
+
+},
+
+{
+id: 2,
+
+slug: "festival-gau-seva",
+
+title: "Festival Gau Seva Event",
+
+date: "February 2026",
+
+image: "/images/blog/festival.jpg",
+
+excerpt:
+"Devotees sponsored feeding seva during festival.",
+
+content:
+"During the festival, many devotees visited our goshala and sponsored feeding seva. It was a blessed day for all cows and volunteers."
+
+},
+
+{
+id: 3,
+
+slug: "new-shelter",
+
+title: "New Shelter Construction",
+
+date: "January 2026",
+
+image: "/images/blog/shelter.jpg",
+
+excerpt:
+"We expanded our shelter.",
+
+content:
+"Our goshala expanded the shelter to protect more rescued cows. This was made possible by generous donations."
+
+}
+
+];
+
+
+---
+
+STEP 3.2 — Update BlogCard to link to detail page
+
+📁 File
+
+src/components/BlogCard.astro
+
+Replace Read More button:
+
+<a href={`/blog/${blog.slug}`} class="btn btn-outline">
+
+Read More
+
+</a>
+
+
+---
+
+STEP 3.3 — Create dynamic blog page
+
+Create folder if needed:
+
+src/pages/blog/
+
+Create file:
+
+src/pages/blog/[slug].astro
+
+
+---
+
+STEP 3.4 — Paste this code
+
+📁 File
+
+src/pages/blog/[slug].astro
+
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+
+import { blogs } from "../../data/blog.js";
+
+export function getStaticPaths(){
+
+return blogs.map(blog => ({
+
+params: { slug: blog.slug },
+
+props: { blog }
+
+}));
+
+}
+
+const { blog } = Astro.props;
+---
+
+<MainLayout title={blog.title}>
+
+<section class="section">
+
+<div class="container">
+
+<h1>
+{blog.title}
+</h1>
+
+<p style="color:#888;">
+{blog.date}
+</p>
+
+<br>
+
+<img
+src={blog.image}
+style="width:100%; max-width:700px; border-radius:12px;">
+
+<br><br>
+
+<p>
+{blog.content}
+</p>
+
+</div>
+
+</section>
+
+</MainLayout>
+
+
+---
+
+STEP 3.5 — Test
+
+Run:
+
+npm run dev
+
+Open:
+
+http://localhost:4321/blog
+
+Click:
+
+Read More
+
+It opens:
+
+/blog/rescue-of-lakshmi
+
+
+---
+
+✅ Result
+
+You now have:
+
+Blog listing page
+Individual blog pages
+Dynamic routing
+
+This is how real NGO blogs work.
+
+
+---
+
+📂 Folder coverage update
+
+src/data/blog.js              ✅ UPDATED
+src/components/BlogCard.astro✅ UPDATED
+src/pages/blog/[slug].astro  ✅ NEW
+
+
+---
+
+PHASE 3 COMPLETE ✅
+
+
+---
+
+NEXT: PHASE 4 — Simple Admin Panel
+
+This allows you to:
+
+Add cows
+Add blogs
+Add products
+
+without editing code manually.
+
+We’ll start with a simple file-based admin first (no database).
+
+
+
+Great. Now we start PHASE 4 — Simple Admin Panel (No Database, beginner-friendly).
+This will let you add cows, blogs, and products without touching the UI pages, just by editing structured files. Later we can upgrade to a real CMS.
+
+We’ll do it in two stages:
+
+1. File-based admin system (now) ✅
+
+
+2. Real admin dashboard with login (later)
+
+
+
+
+---
+
+🟢 PHASE 4.1 — Convert data into structured “admin-editable” format
+
+You already have:
+
+src/data/
+ ├ cows.js
+ ├ blog.js
+ └ products.js
+
+We’ll improve structure so adding new entries is easy and safe.
+
+
+---
+
+STEP 4.1 — Improve cows.js format
+
+📁 File
+
+src/data/cows.js
+
+Update to this structure:
+
+export const cows = [
+
+{
+id: "cow-001",
+
+slug: "lakshmi",
+
+name: "Lakshmi",
+
+age: "7 years",
+
+breed: "Gir",
+
+status: "Rescued",
+
+sponsorAmount: 3000,
+
+image: "/images/cows/lakshmi.jpg",
+
+description:
+"Rescued from highway with leg injury.",
+
+story:
+"Lakshmi was rescued and treated. She now lives safely."
+
+},
+
+{
+id: "cow-002",
+
+slug: "kamadhenu",
+
+name: "Kamadhenu",
+
+age: "5 years",
+
+breed: "Sahiwal",
+
+status: "Healthy",
+
+sponsorAmount: 2500,
+
+image: "/images/cows/kamadhenu.jpg",
+
+description:
+"Healthy and calm cow.",
+
+story:
+"Kamadhenu is peaceful and loved by visitors."
+
+}
+
+];
+
+Now admin only edits this file.
+
+
+---
+
+STEP 4.2 — Improve blog.js
+
+📁 File
+
+src/data/blog.js
+
+export const blogs = [
+
+{
+id: "blog-001",
+
+slug: "rescue-of-lakshmi",
+
+title: "Rescue of Lakshmi",
+
+date: "2026-03-01",
+
+author: "Kamadenu Team",
+
+image: "/images/blog/rescue.jpg",
+
+excerpt:
+"Lakshmi was rescued and treated.",
+
+content:
+"Full rescue story here."
+
+}
+
+];
+
+
+---
+
+STEP 4.3 — Improve products.js
+
+📁 File
+
+src/data/products.js
+
+export const products = [
+
+{
+id: "prod-001",
+
+name: "Cow Dung Cakes",
+
+price: 150,
+
+image: "/images/products/dung-cakes.jpg",
+
+description:
+"Organic dung cakes for pooja.",
+
+paymentLink:
+"https://rzp.io/l/yourlink"
+
+}
+
+];
+
+
+---
+
+🟢 PHASE 4.2 — Create hidden Admin Page
+
+This lets admin view and copy structure easily.
+
+
+---
+
+📁 File
+
+src/pages/admin.astro
+
+Paste:
+
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+import { cows } from "../data/cows.js";
+
+import { blogs } from "../data/blog.js";
+
+import { products } from "../data/products.js";
+---
+
+<MainLayout title="Admin">
+
+<section class="section">
+
+<div class="container">
+
+<h1 class="section-title">
+Admin Panel (File-Based)
+</h1>
+
+<h2>Cows</h2>
+
+<pre>
+{JSON.stringify(cows, null, 2)}
+</pre>
+
+<h2>Blogs</h2>
+
+<pre>
+{JSON.stringify(blogs, null, 2)}
+</pre>
+
+<h2>Products</h2>
+
+<pre>
+{JSON.stringify(products, null, 2)}
+</pre>
+
+<p>
+Edit files inside <b>src/data/</b> to add content.
+</p>
+
+</div>
+
+</section>
+
+</MainLayout>
+
+
+---
+
+STEP 4.3 — Test admin page
+
+Run:
+
+npm run dev
+
+Open:
+
+http://localhost:4321/admin
+
+You’ll see all data.
+
+
+---
+
+✅ Result
+
+You now have a basic admin system where:
+
+Admin edits:
+
+src/data/cows.js
+src/data/blog.js
+src/data/products.js
+
+Website updates automatically.
+
+No database needed.
+
+
+---
+
+🟢 PHASE 4 COMPLETE (Basic Admin)
+
+
+---
+
+NEXT: PHASE 4.5 — REAL Admin Dashboard (Optional but powerful)
+
+Options:
+
+Option A — Netlify CMS (recommended)
+Option B — Decap CMS
+Option C — Custom Node admin
+
+Recommended: Decap CMS (works perfectly with Astro)
+
+
+---
+
+🟢 PHASE 5 — Deployment (Netlify or Vercel)
+
+We’ll deploy so your site is live like:
+
+https://kamadenugoushala.org
+
+
+---
+
+Tell me which you want first:
+
+A. Deploy to Netlify (easiest)
+or
+B. Add real Admin dashboard (Decap CMS)
+
+
+
+
+Perfect choice 👍
+We’ll do this in the correct production order:
+
+1. Deploy to Vercel first (required so Admin CMS has a live URL)
+
+
+2. Add real Admin Dashboard (Decap CMS) connected to GitHub
+
+
+
+We’ll go step-by-step.
+
+
+---
+
+🟢 PHASE 5 — Deploy Kamadenu Goushala to Vercel
+
+Vercel works perfectly with Astro and is free.
+
+
+---
+
+STEP 5.1 — Push project to GitHub
+
+If you don’t have Git initialized, open PowerShell inside:
+
+cd goshala-website
+
+Run:
+
+git init
+git add .
+git commit -m "Initial Kamadenu Goushala website"
+
+
+---
+
+STEP 5.2 — Create GitHub repository
+
+Go to:
+
+https://github.com
+
+Click:
+
+New repository
+
+Name:
+
+kamadenu-goushala
+
+Click Create.
+
+
+---
+
+STEP 5.3 — Connect local project to GitHub
+
+GitHub will show commands like this.
+
+Run in PowerShell:
+
+git remote add origin https://github.com/YOURUSERNAME/kamadenu-goushala.git
+git branch -M main
+git push -u origin main
+
+Now your code is on GitHub.
+
+
+---
+
+STEP 5.4 — Deploy to Vercel
+
+Go to:
+
+https://vercel.com
+
+Login using GitHub.
+
+Click:
+
+Add New Project
+
+Select:
+
+kamadenu-goushala repository
+
+Click:
+
+Deploy
+
+No special settings needed. Astro auto-detects.
+
+
+---
+
+STEP 5.5 — Your site goes live
+
+You’ll get URL like:
+
+https://kamadenu-goushala.vercel.app
+
+Your full website is now live 🎉
+
+
+---
+
+🟢 PHASE 6 — Add REAL Admin Dashboard (Decap CMS)
+
+This lets you:
+
+Add cows
+Add blogs
+Add products
+
+from browser, no coding.
+
+
+---
+
+STEP 6.1 — Create admin folder
+
+Create this folder:
+
+public/admin/
+
+Structure:
+
+public/
+ └ admin/
+     ├ index.html
+     └ config.yml
+
+
+---
+
+STEP 6.2 — Create admin index.html
+
+📁 File
+
+public/admin/index.html
+
+Paste:
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Kamadenu Goushala Admin</title>
+
+<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+</head>
+<body>
+</body>
+</html>
+
+
+---
+
+STEP 6.3 — Create config.yml
+
+📁 File
+
+public/admin/config.yml
+
+Paste:
+
+backend:
+  name: github
+  repo: YOURUSERNAME/kamadenu-goushala
+  branch: main
+
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+
+  - name: "cows"
+    label: "Cows"
+    folder: "src/data/cows"
+    create: true
+    extension: "json"
+    format: "json"
+    fields:
+
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Age", name: "age", widget: "string" }
+      - { label: "Breed", name: "breed", widget: "string" }
+      - { label: "Status", name: "status", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Story", name: "story", widget: "text" }
+
+
+  - name: "blog"
+    label: "Blog"
+    folder: "src/data/blog"
+    create: true
+    extension: "json"
+    format: "json"
+
+    fields:
+
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Content", name: "content", widget: "text" }
+
+Replace:
+
+YOURUSERNAME
+
+with your GitHub username.
+
+
+---
+
+STEP 6.4 — Push changes
+
+git add .
+git commit -m "Add admin dashboard"
+git push
+
+Vercel auto-deploys.
+
+
+---
+
+STEP 6.5 — Open admin panel
+
+Go to:
+
+https://kamadenu-goushala.vercel.app/admin
+
+Login with GitHub.
+
+You can now:
+
+Add cows
+Add blogs
+Upload images
+
+from browser.
+
+
+---
+
+✅ Final architecture now
+
+Live Website
+https://kamadenu-goushala.vercel.app
+
+Admin Panel
+https://kamadenu-goushala.vercel.app/admin
+
+
+---
+
+✅ What you now have (production-level)
+
+Website frontend        ✅
+Dynamic cow pages       ✅
+Dynamic blog pages      ✅
+Payment integration     ✅
+Admin dashboard         ✅
+Live deployment         ✅
+
+
+---
+
+NEXT recommended upgrades
+
+We can add:
+
+Donor certificates PDF
+Sponsor tracking
+Multi-language
+SEO optimization
+
+
+---
+
+Next, I recommend: Connect Razorpay fully with automatic donor receipts.
+
+
+
+
+Perfect choice 👍
+We’ll do this in the correct production order:
+
+1. Deploy to Vercel first (required so Admin CMS has a live URL)
+
+
+2. Add real Admin Dashboard (Decap CMS) connected to GitHub
+
+
+
+We’ll go step-by-step.
+
+
+---
+
+🟢 PHASE 5 — Deploy Kamadenu Goushala to Vercel
+
+Vercel works perfectly with Astro and is free.
+
+
+---
+
+STEP 5.1 — Push project to GitHub
+
+If you don’t have Git initialized, open PowerShell inside:
+
+cd goshala-website
+
+Run:
+
+git init
+git add .
+git commit -m "Initial Kamadenu Goushala website"
+
+
+---
+
+STEP 5.2 — Create GitHub repository
+
+Go to:
+
+https://github.com
+
+Click:
+
+New repository
+
+Name:
+
+kamadenu-goushala
+
+Click Create.
+
+
+---
+
+STEP 5.3 — Connect local project to GitHub
+
+GitHub will show commands like this.
+
+Run in PowerShell:
+
+git remote add origin https://github.com/YOURUSERNAME/kamadenu-goushala.git
+git branch -M main
+git push -u origin main
+
+Now your code is on GitHub.
+
+
+---
+
+STEP 5.4 — Deploy to Vercel
+
+Go to:
+
+https://vercel.com
+
+Login using GitHub.
+
+Click:
+
+Add New Project
+
+Select:
+
+kamadenu-goushala repository
+
+Click:
+
+Deploy
+
+No special settings needed. Astro auto-detects.
+
+
+---
+
+STEP 5.5 — Your site goes live
+
+You’ll get URL like:
+
+https://kamadenu-goushala.vercel.app
+
+Your full website is now live 🎉
+
+
+---
+
+🟢 PHASE 6 — Add REAL Admin Dashboard (Decap CMS)
+
+This lets you:
+
+Add cows
+Add blogs
+Add products
+
+from browser, no coding.
+
+
+---
+
+STEP 6.1 — Create admin folder
+
+Create this folder:
+
+public/admin/
+
+Structure:
+
+public/
+ └ admin/
+     ├ index.html
+     └ config.yml
+
+
+---
+
+STEP 6.2 — Create admin index.html
+
+📁 File
+
+public/admin/index.html
+
+Paste:
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Kamadenu Goushala Admin</title>
+
+<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+</head>
+<body>
+</body>
+</html>
+
+
+---
+
+STEP 6.3 — Create config.yml
+
+📁 File
+
+public/admin/config.yml
+
+Paste:
+
+backend:
+  name: github
+  repo: YOURUSERNAME/kamadenu-goushala
+  branch: main
+
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+
+  - name: "cows"
+    label: "Cows"
+    folder: "src/data/cows"
+    create: true
+    extension: "json"
+    format: "json"
+    fields:
+
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Age", name: "age", widget: "string" }
+      - { label: "Breed", name: "breed", widget: "string" }
+      - { label: "Status", name: "status", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Story", name: "story", widget: "text" }
+
+
+  - name: "blog"
+    label: "Blog"
+    folder: "src/data/blog"
+    create: true
+    extension: "json"
+    format: "json"
+
+    fields:
+
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Content", name: "content", widget: "text" }
+
+Replace:
+
+YOURUSERNAME
+
+with your GitHub username.
+
+
+---
+
+STEP 6.4 — Push changes
+
+git add .
+git commit -m "Add admin dashboard"
+git push
+
+Vercel auto-deploys.
+
+
+---
+
+STEP 6.5 — Open admin panel
+
+Go to:
+
+https://kamadenu-goushala.vercel.app/admin
+
+Login with GitHub.
+
+You can now:
+
+Add cows
+Add blogs
+Upload images
+
+from browser.
+
+
+---
+
+✅ Final architecture now
+
+Live Website
+https://kamadenu-goushala.vercel.app
+
+Admin Panel
+https://kamadenu-goushala.vercel.app/admin
+
+
+---
+
+✅ What you now have (production-level)
+
+Website frontend        ✅
+Dynamic cow pages       ✅
+Dynamic blog pages      ✅
+Payment integration     ✅
+Admin dashboard         ✅
+Live deployment         ✅
+
+
+---
+
+NEXT recommended upgrades
+
+We can add:
+
+Donor certificates PDF
+Sponsor tracking
+Multi-language
+SEO optimization
+
+
+---
+
+Next, I recommend: Connect Razorpay fully with automatic donor receipts.

@@ -1,0 +1,35 @@
+---
+const { product } = Astro.props;
+---
+
+<div class="card">
+
+<img src={product.image} alt={product.name}>
+
+<div class="card-body">
+
+<h3 class="card-title">
+{product.name}
+</h3>
+
+<p style="font-weight:600; color:#e67e22;">
+{product.price}
+</p>
+
+<p>
+{product.description}
+</p>
+
+<br>
+
+<a
+href="https://wa.me/919000000000?text=I want to order {product.name}"
+class="btn btn-primary">
+
+Order on WhatsApp
+
+</a>
+
+</div>
+
+</div>

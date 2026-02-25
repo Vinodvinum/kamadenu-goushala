@@ -1,0 +1,870 @@
+Now we build STEP 7 — Donate / Feed-a-Cow Seva Page, which is the most important page for Kamadenu Goushala because this is where donors contribute 🐄🙏
+
+We’ll create a clean seva options layout with buttons for UPI, Razorpay, or WhatsApp.
+
+
+---
+
+STEP 7.1 — Create donate page
+
+📁 File
+
+src/pages/donate.astro
+
+Paste this code:
+
+---
+import MainLayout from "../layouts/MainLayout.astro";
+---
+
+<MainLayout title="Donate">
+
+<section class="section">
+
+<div class="container">
+
+<h1 class="section-title">
+Support Gau Seva
+</h1>
+
+<p style="text-align:center; max-width:700px; margin:auto; margin-bottom:40px;">
+
+Your donation helps provide food, shelter, and medical care for rescued cows.
+Every contribution supports our sacred mission.
+
+</p>
+
+
+<div class="grid">
+
+<!-- Feed one cow -->
+
+<div class="card">
+
+<div class="card-body">
+
+<h3 class="card-title">
+Feed One Cow
+</h3>
+
+<p>
+Provide food for one cow for a day.
+</p>
+
+<h3 style="color:#e67e22;">
+₹51
+</h3>
+
+<br>
+
+<a href="#"
+class="btn btn-primary">
+
+Donate Now
+
+</a>
+
+</div>
+
+</div>
+
+
+<!-- Feed multiple cows -->
+
+<div class="card">
+
+<div class="card-body">
+
+<h3 class="card-title">
+Feed 10 Cows
+</h3>
+
+<p>
+Support feeding seva for multiple cows.
+</p>
+
+<h3 style="color:#e67e22;">
+₹501
+</h3>
+
+<br>
+
+<a href="#"
+class="btn btn-primary">
+
+Donate Now
+
+</a>
+
+</div>
+
+</div>
+
+
+<!-- Full day feeding -->
+
+<div class="card">
+
+<div class="card-body">
+
+<h3 class="card-title">
+Full Day Feeding Seva
+</h3>
+
+<p>
+Sponsor feeding for all cows for one day.
+</p>
+
+<h3 style="color:#e67e22;">
+₹2001
+</h3>
+
+<br>
+
+<a href="#"
+class="btn btn-primary">
+
+Donate Now
+
+</a>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- Custom donation -->
+
+<br><br>
+
+<div style="text-align:center;">
+
+<h2>
+Custom Donation
+</h2>
+
+<p>
+Donate any amount using UPI or contact us directly.
+</p>
+
+<br>
+
+<a
+href="https://wa.me/919000000000"
+class="btn btn-outline">
+
+Contact for Donation
+
+</a>
+
+</div>
+
+
+</div>
+
+</section>
+
+</MainLayout>
+
+
+---
+
+STEP 7.2 — Connect real payments (optional now, later replace)
+
+You can replace:
+
+href="#"
+
+with:
+
+UPI link example:
+
+href="upi://pay?pa=yourupi@bank&pn=KamadenuGoushala"
+
+OR Razorpay payment link:
+
+href="https://rzp.io/l/yourlink"
+
+OR WhatsApp:
+
+href="https://wa.me/919000000000"
+
+
+---
+
+STEP 7.3 — Test page
+
+Run:
+
+npm run dev
+
+Open:
+
+http://localhost:4321/donate
+
+
+---
+
+✅ Result
+
+You now have:
+
+✔ Feed cow seva options
+✔ Donation buttons
+✔ Structured donation layout
+
+
+---
+
+📂 Folder coverage update
+
+src/pages/donate.astro   ✅ COVERED
+
+
+---
+
+📊 Overall progress
+
+Foundation            ✅
+Homepage              ✅
+Cow adoption system   ✅
+Blog system           ✅
+Products system       ✅
+Donate system         ✅
+Contact page          ⬅ NEXT
+Gallery               pending
+About page            pending
+
+
+---
+
+NEXT STEP (STEP 8)
+
+We’ll build a Contact page with:
+
+Phone
+WhatsApp button
+Google Maps embed
+Contact form
+
+
+
+
+Great. Now we’ll build STEP 8 — Contact Page for Kamadenu Goushala 📍
+This page helps visitors call, WhatsApp, visit, or locate your goshala.
+
+We’ll include:
+
+Phone number
+
+WhatsApp button
+
+Address
+
+Google Maps embed
+
+Contact info cards
+
+
+
+---
+
+STEP 8.1 — Create contact page
+
+📁 File
+
+src/pages/contact.astro
+
+Paste this code:
+
+---
+import MainLayout from "../layouts/MainLayout.astro";
+---
+
+<MainLayout title="Contact">
+
+<section class="section">
+
+<div class="container">
+
+<h1 class="section-title">
+Contact Kamadenu Goushala
+</h1>
+
+
+<div class="grid">
+
+<!-- Phone -->
+
+<div class="card">
+
+<div class="card-body">
+
+<h3 class="card-title">
+📞 Call Us
+</h3>
+
+<p>
++91 9000000000
+</p>
+
+<a href="tel:+919000000000"
+class="btn btn-outline">
+
+Call Now
+
+</a>
+
+</div>
+
+</div>
+
+
+<!-- WhatsApp -->
+
+<div class="card">
+
+<div class="card-body">
+
+<h3 class="card-title">
+💬 WhatsApp
+</h3>
+
+<p>
+Contact us for seva, adoption, or donations.
+</p>
+
+<a href="https://wa.me/919000000000"
+class="btn btn-primary">
+
+Message Now
+
+</a>
+
+</div>
+
+</div>
+
+
+<!-- Address -->
+
+<div class="card">
+
+<div class="card-body">
+
+<h3 class="card-title">
+📍 Visit Goshala
+</h3>
+
+<p>
+Kamadenu Goushala  
+Your Village Name  
+Your District, State  
+India
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- Map -->
+
+<br><br>
+
+<h2 style="text-align:center;">
+Our Location
+</h2>
+
+<br>
+
+<div style="width:100%; height:400px;">
+
+<iframe
+width="100%"
+height="100%"
+style="border:0"
+loading="lazy"
+allowfullscreen
+src="https://maps.google.com/maps?q=bangalore&t=&z=13&ie=UTF8&iwloc=&output=embed">
+
+</iframe>
+
+</div>
+
+
+</div>
+
+</section>
+
+</MainLayout>
+
+
+---
+
+STEP 8.2 — Replace with your real info later
+
+Update:
+
+Phone:
+
++91 YOUR NUMBER
+
+WhatsApp:
+
+https://wa.me/YOURNUMBER
+
+Map:
+
+Replace:
+
+bangalore
+
+with your goshala location.
+
+Example:
+
+mysore goshala
+
+
+---
+
+STEP 8.3 — Test page
+
+Run:
+
+npm run dev
+
+Open:
+
+http://localhost:4321/contact
+
+
+---
+
+✅ Result
+
+You now have:
+
+✔ Call button
+✔ WhatsApp button
+✔ Address section
+✔ Google Maps
+
+Professional NGO contact page.
+
+
+---
+
+📂 Folder coverage update
+
+src/pages/contact.astro   ✅ COVERED
+
+
+---
+
+📊 Overall progress now
+
+Foundation            ✅
+Homepage              ✅
+Cow adoption system   ✅
+Blog system           ✅
+Products system       ✅
+Donate system         ✅
+Contact page          ✅
+Gallery               ⬅ NEXT
+About page            pending
+
+
+---
+
+NEXT STEP (STEP 9)
+
+We’ll build a Gallery page to show:
+
+Cow photos
+Events
+Shelter photos
+
+This builds trust with donors.
+
+
+
+
+Now we build STEP 9 — Gallery Page 📸
+This page is very important for a goshala because donors want to see real photos of cows, shelter, and activities. It builds trust.
+
+We’ll use a simple image gallery powered by your public/images folder.
+
+
+---
+
+STEP 9.1 — Upload gallery images
+
+Put images inside:
+
+public/images/gallery/
+
+If folder doesn’t exist, create it.
+
+Example:
+
+public/images/gallery/cow1.jpg
+public/images/gallery/cow2.jpg
+public/images/gallery/shelter.jpg
+public/images/gallery/feeding.jpg
+
+
+---
+
+STEP 9.2 — Create gallery page
+
+📁 File
+
+src/pages/gallery.astro
+
+Paste this code:
+
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+const images = [
+
+"/images/gallery/cow1.jpg",
+"/images/gallery/cow2.jpg",
+"/images/gallery/shelter.jpg",
+"/images/gallery/feeding.jpg",
+
+];
+---
+
+<MainLayout title="Gallery">
+
+<section class="section">
+
+<div class="container">
+
+<h1 class="section-title">
+Goshala Gallery
+</h1>
+
+<p style="text-align:center; margin-bottom:40px;">
+See our cows, shelter, and daily seva activities.
+</p>
+
+
+<div class="grid">
+
+{
+images.map(image => (
+
+<div class="card">
+
+<img src={image} alt="Goshala image">
+
+</div>
+
+))
+}
+
+</div>
+
+
+</div>
+
+</section>
+
+</MainLayout>
+
+
+---
+
+STEP 9.3 — Test page
+
+Run:
+
+npm run dev
+
+Open:
+
+http://localhost:4321/gallery
+
+
+---
+
+✅ Result
+
+You now have:
+
+✔ Image gallery
+✔ Responsive layout
+✔ Clean card design
+
+
+---
+
+📂 Folder coverage update
+
+public/images/gallery/     ✅ NOW USED
+src/pages/gallery.astro    ✅ COVERED
+
+
+---
+
+📊 Overall project progress
+
+Foundation            ✅
+Homepage              ✅
+Cow adoption system   ✅
+Blog system           ✅
+Products system       ✅
+Donate system         ✅
+Contact page          ✅
+Gallery               ✅
+About page            ⬅ NEXT (FINAL CORE PAGE)
+
+
+---
+
+NEXT STEP (STEP 10)
+
+We’ll build a beautiful About page including:
+
+Mission
+Vision
+History
+Why goshala exists
+
+This completes the core website.
+
+
+
+
+Now we build STEP 10 — About Page, which is critical for trust, authenticity, and storytelling. Donors and visitors always check this page before donating 🐄🙏
+
+This page explains:
+
+Mission
+
+Vision
+
+Story
+
+What you do
+
+
+
+---
+
+STEP 10.1 — Create About page
+
+📁 File
+
+src/pages/about.astro
+
+Paste this code:
+
+---
+import MainLayout from "../layouts/MainLayout.astro";
+---
+
+<MainLayout title="About Kamadenu Goushala">
+
+<section class="section">
+
+<div class="container">
+
+<h1 class="section-title">
+About Kamadenu Goushala
+</h1>
+
+
+<!-- Mission -->
+
+<div class="card">
+
+<div class="card-body">
+
+<h2>
+Our Mission
+</h2>
+
+<p>
+
+Kamadenu Goushala is dedicated to rescuing, protecting, and caring for abandoned,
+injured, and elderly cows. We provide shelter, food, and medical care to ensure
+their safety and well-being.
+
+</p>
+
+</div>
+
+</div>
+
+
+<br>
+
+
+<!-- Vision -->
+
+<div class="card">
+
+<div class="card-body">
+
+<h2>
+Our Vision
+</h2>
+
+<p>
+
+Our vision is to create a safe and peaceful environment where every cow is
+treated with respect and compassion, preserving traditional values and
+supporting sustainable living.
+
+</p>
+
+</div>
+
+</div>
+
+
+<br>
+
+
+<!-- Activities -->
+
+<div class="card">
+
+<div class="card-body">
+
+<h2>
+What We Do
+</h2>
+
+<ul>
+
+<li>Rescue abandoned and injured cows</li>
+
+<li>Provide daily feeding and medical care</li>
+
+<li>Offer cow adoption and seva opportunities</li>
+
+<li>Produce organic cow-based products</li>
+
+<li>Promote gau seva awareness</li>
+
+</ul>
+
+</div>
+
+</div>
+
+
+<br>
+
+
+<!-- Call to action -->
+
+<div style="text-align:center; margin-top:40px;">
+
+<h2>
+Support Our Mission
+</h2>
+
+<p>
+Your support helps us protect and care for sacred cows.
+</p>
+
+<br>
+
+<a href="/donate" class="btn btn-primary">
+
+Donate Now
+
+</a>
+
+</div>
+
+
+</div>
+
+</section>
+
+</MainLayout>
+
+
+---
+
+STEP 10.2 — Test page
+
+Run:
+
+npm run dev
+
+Open:
+
+http://localhost:4321/about
+
+
+---
+
+✅ Result
+
+You now have:
+
+✔ Mission section
+✔ Vision section
+✔ Activities list
+✔ Donate button
+
+Professional NGO About page.
+
+
+---
+
+📂 Folder coverage update
+
+src/pages/about.astro   ✅ COVERED
+
+
+---
+
+🎉 CORE WEBSITE COMPLETE
+
+Your Kamadenu Goushala now has:
+
+Home        ✅
+About       ✅
+Our Cows    ✅
+Donate      ✅
+Blog        ✅
+Products    ✅
+Gallery     ✅
+Contact     ✅
+Layout      ✅
+Components  ✅
+Data system ✅
+
+
+---
+
+🚀 Next optional upgrades (recommended)
+
+These make it production-level:
+
+Add real Razorpay payments
+Add individual cow detail pages
+Add blog detail pages
+Add admin panel later
+Deploy to Netlify/Vercel
+
+
+---
+
+If you want, next I can show how to deploy this Astro site live for free.

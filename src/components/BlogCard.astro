@@ -1,0 +1,33 @@
+---
+const { blog } = Astro.props;
+---
+
+<div class="card">
+
+<img src={blog.image} alt={blog.title}>
+
+<div class="card-body">
+
+<h3 class="card-title">
+{blog.title}
+</h3>
+
+<p style="font-size:14px; color:#888;">
+{blog.date}
+</p>
+
+<p>
+{blog.excerpt}
+</p>
+
+<br>
+
+<a href={`/blog/${blog.slug}`} class="btn btn-outline">
+
+Read More
+
+</a>
+
+</div>
+
+</div>

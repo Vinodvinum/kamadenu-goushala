@@ -1,0 +1,48 @@
+---
+const { cow } = Astro.props;
+---
+
+<div class="card">
+
+<img src={cow.image} alt={cow.name}>
+
+<div class="card-body">
+
+<h3 class="card-title">
+{cow.name}
+</h3>
+
+<p>
+Age: {cow.age}
+</p>
+
+<p>
+Breed: {cow.breed}
+</p>
+
+<p>
+Status: {cow.status}
+</p>
+
+<p style="font-size:14px; color:#666;">
+{cow.description}
+</p>
+
+<br>
+
+<br>
+
+<a href={`/cows/${cow.slug}`} class="btn btn-outline">
+View Details
+</a>
+
+<a
+href="https://rzp.io/l/abc123"
+target="_blank"
+class="btn btn-primary">
+
+Sponsor Cow
+
+</a>
+
+</div>

@@ -1,0 +1,17 @@
+{
+  "name": "kamadenu-goushala",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^5.17.3",
+    "prettier": "^3.0.0",
+    "prettier-plugin-astro": "^0.3.0",
+    "typescript": "^5.9.3"
+  }
+}

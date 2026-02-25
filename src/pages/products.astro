@@ -1,0 +1,39 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+import ProductCard from "../components/ProductCard.astro";
+
+import { products } from "../data/products.js";
+---
+
+<MainLayout title="Gou Products">
+
+<section class="section">
+
+<div class="container">
+
+<h1 class="section-title">
+
+Gou Products
+
+</h1>
+
+
+<div class="grid">
+
+{
+products.map(product => (
+
+<ProductCard product={product} />
+
+))
+}
+
+</div>
+
+
+</div>
+
+</section>
+
+</MainLayout>

@@ -1,0 +1,39 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+import CowCard from "../components/CowCard.astro";
+
+import { cows } from "../data/cows.js";
+---
+
+<MainLayout title="Our Cows">
+
+<section class="section">
+
+<div class="container">
+
+<h1 class="section-title">
+
+Our Cows
+
+</h1>
+
+
+<div class="grid">
+
+{
+cows.map(cow => (
+
+<CowCard cow={cow} />
+
+))
+}
+
+</div>
+
+
+</div>
+
+</section>
+
+</MainLayout>

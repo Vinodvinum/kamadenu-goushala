@@ -1,0 +1,50 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+const images = [
+
+"/images/gallery/cow1.jpg",
+"/images/gallery/cow2.jpg",
+"/images/gallery/shelter.jpg",
+"/images/gallery/feeding.jpg",
+
+];
+---
+
+<MainLayout title="Gallery">
+
+<section class="section">
+
+<div class="container">
+
+<h1 class="section-title">
+Goshala Gallery
+</h1>
+
+<p style="text-align:center; margin-bottom:40px;">
+See our cows, shelter, and daily seva activities.
+</p>
+
+
+<div class="grid">
+
+{
+images.map(image => (
+
+<div class="card">
+
+<img src={image} alt="Goshala image">
+
+</div>
+
+))
+}
+
+</div>
+
+
+</div>
+
+</section>
+
+</MainLayout>

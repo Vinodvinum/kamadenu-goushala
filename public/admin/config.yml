@@ -1,0 +1,40 @@
+backend:
+  name: github
+  repo: https://github.com/Vinodvinum/kamadenu-goushala.git
+  branch: main
+
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+
+  - name: "cows"
+    label: "Cows"
+    folder: "src/data/cows"
+    create: true
+    extension: "json"
+    format: "json"
+    fields:
+
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Age", name: "age", widget: "string" }
+      - { label: "Breed", name: "breed", widget: "string" }
+      - { label: "Status", name: "status", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Story", name: "story", widget: "text" }
+
+
+  - name: "blog"
+    label: "Blog"
+    folder: "src/data/blog"
+    create: true
+    extension: "json"
+    format: "json"
+
+    fields:
+
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Content", name: "content", widget: "text" }
