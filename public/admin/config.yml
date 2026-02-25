@@ -25,7 +25,6 @@ collections:
       - { label: "Image", name: "image", widget: "image" }
       - { label: "Story", name: "story", widget: "text" }
 
-
   - name: "blog"
     label: "Blog"
     folder: "src/data/blog"
