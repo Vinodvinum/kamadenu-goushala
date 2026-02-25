@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "dev:cms": "npx decap-server",
     "build": "astro build",
     "preview": "astro preview"
   },
@@ -13,5 +14,8 @@
     "prettier": "^3.0.0",
     "prettier-plugin-astro": "^0.3.0",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "decap-server": "^3.5.2"
   }
 }

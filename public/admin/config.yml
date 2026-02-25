@@ -2,8 +2,12 @@ backend:
   name: github
   repo: Vinodvinum/kamadenu-goushala
   branch: main
+  base_url: https://YOUR-OAUTH-PROXY-DOMAIN.com
+  auth_endpoint: auth
+  site_domain: YOUR-VERCEL-DOMAIN.vercel.app
 
-local_backend: true
+# Enable only when running local proxy (`npm run dev:cms`) during local development.
+# local_backend: true
 
 media_folder: "public/images"
 public_folder: "/images"
