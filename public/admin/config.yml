@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: https://github.com/Vinodvinum/kamadenu-goushala.git
+  repo: Vinodvinum/kamadenu-goushala
   branch: main
 
 media_folder: "public/images"
@@ -12,10 +12,11 @@ collections:
     label: "Cows"
     folder: "src/data/cows"
     create: true
+    slug: "{{slug}}"
     extension: "json"
     format: "json"
-    fields:
 
+    fields:
       - { label: "Name", name: "name", widget: "string" }
       - { label: "Slug", name: "slug", widget: "string" }
       - { label: "Age", name: "age", widget: "string" }
@@ -29,11 +30,11 @@ collections:
     label: "Blog"
     folder: "src/data/blog"
     create: true
+    slug: "{{slug}}"
     extension: "json"
     format: "json"
 
     fields:
-
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Slug", name: "slug", widget: "string" }
       - { label: "Image", name: "image", widget: "image" }
