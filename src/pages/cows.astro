@@ -1,9 +1,9 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
-
 import CowCard from "../components/CowCard.astro";
+import { getAllCows } from "../lib/content.js";
 
-import { cows } from "../data/cows.js";
+const cows = await getAllCows();
 ---
 
 <MainLayout title="Our Cows">

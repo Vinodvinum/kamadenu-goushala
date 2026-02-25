@@ -1,18 +1,13 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
+import { getAllBlogs } from "../../lib/content.js";
 
-import { blogs } from "../../data/blog.js";
-
-export function getStaticPaths(){
-
-return blogs.map(blog => ({
-
-params: { slug: blog.slug },
-
-props: { blog }
-
-}));
-
+export async function getStaticPaths() {
+  const blogs = await getAllBlogs();
+  return blogs.map((blog) => ({
+    params: { slug: blog.slug },
+    props: { blog },
+  }));
 }
 
 const { blog } = Astro.props;

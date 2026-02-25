@@ -1,0 +1,12 @@
+{
+  "id": "cow-002",
+  "slug": "kamadhenu",
+  "name": "Kamadhenu",
+  "age": "5 years",
+  "breed": "Sahiwal",
+  "status": "Healthy",
+  "sponsorAmount": 2500,
+  "image": "/images/cows/kamadhenu.jpg",
+  "description": "Calm and friendly cow cared daily in our goshala.",
+  "story": "Kamadhenu is one of the most peaceful cows in our shelter. She was rescued from abandonment."
+}

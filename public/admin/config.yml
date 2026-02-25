@@ -3,6 +3,8 @@ backend:
   repo: Vinodvinum/kamadenu-goushala
   branch: main
 
+local_backend: true
+
 media_folder: "public/images"
 public_folder: "/images"
 
@@ -17,12 +19,15 @@ collections:
     format: "json"
 
     fields:
+      - { label: "ID", name: "id", widget: "string", required: false }
       - { label: "Name", name: "name", widget: "string" }
       - { label: "Slug", name: "slug", widget: "string" }
       - { label: "Age", name: "age", widget: "string" }
       - { label: "Breed", name: "breed", widget: "string" }
       - { label: "Status", name: "status", widget: "string" }
+      - { label: "Sponsor Amount", name: "sponsorAmount", widget: "number", required: false }
       - { label: "Image", name: "image", widget: "image" }
+      - { label: "Description", name: "description", widget: "text", required: false }
       - { label: "Story", name: "story", widget: "text" }
 
   - name: "blog"
@@ -34,7 +39,10 @@ collections:
     format: "json"
 
     fields:
+      - { label: "ID", name: "id", widget: "string", required: false }
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Date", name: "date", widget: "string" }
       - { label: "Image", name: "image", widget: "image" }
+      - { label: "Excerpt", name: "excerpt", widget: "text" }
       - { label: "Content", name: "content", widget: "text" }

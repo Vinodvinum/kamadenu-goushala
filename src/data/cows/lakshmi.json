@@ -1,0 +1,12 @@
+{
+  "id": "cow-001",
+  "slug": "lakshmi",
+  "name": "Lakshmi",
+  "age": "7 years",
+  "breed": "Gir",
+  "status": "Rescued",
+  "sponsorAmount": 3000,
+  "image": "/images/cows/lakshmi.jpg",
+  "description": "Rescued from highway with leg injury. Now healthy and safe.",
+  "story": "Lakshmi was found injured on the roadside. Our team rescued her and provided medical care. Today she lives safely in our goshala."
+}

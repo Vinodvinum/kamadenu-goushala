@@ -1,18 +1,13 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
+import { getAllCows } from "../../lib/content.js";
 
-import { cows } from "../../data/cows.js";
-
-export function getStaticPaths(){
-
-return cows.map(cow => ({
-
-params: { slug: cow.slug },
-
-props: { cow }
-
-}));
-
+export async function getStaticPaths() {
+  const cows = await getAllCows();
+  return cows.map((cow) => ({
+    params: { slug: cow.slug },
+    props: { cow },
+  }));
 }
 
 const { cow } = Astro.props;

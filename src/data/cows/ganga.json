@@ -1,0 +1,12 @@
+{
+  "id": "cow-003",
+  "slug": "ganga",
+  "name": "Ganga",
+  "age": "4 years",
+  "breed": "Desi",
+  "status": "Under Care",
+  "sponsorAmount": 2000,
+  "image": "/images/cows/ganga.jpg",
+  "description": "Receiving medical care.",
+  "story": "Ganga was rescued recently and is recovering under veterinary care."
+}
