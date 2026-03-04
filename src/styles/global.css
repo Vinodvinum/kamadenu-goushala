@@ -394,44 +394,141 @@ width:100%;
 /* ============================= */
 
 .footer{
-  background:#111;
-  color:#eee;
-  padding:40px 20px 10px;
+
+background:#111;
+
+color:#eee;
+
+padding:50px 20px 15px;
+
 }
 
 .footer-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:30px;
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+gap:35px;
+
 }
 
-.footer h3,
+.footer h3{
+
+color:white;
+
+margin-bottom:10px;
+
+}
+
 .footer h4{
-  margin-bottom:10px;
+
+margin-bottom:12px;
+
+color:#f4e7c5;
+
 }
 
 .footer ul{
-  list-style:none;
-  padding:0;
+
+list-style:none;
+
+padding:0;
+
+}
+
+.footer li{
+
+margin-bottom:8px;
+
 }
 
 .footer a{
-  color:#ddd;
-  text-decoration:none;
+
+color:#ddd;
+
+transition:0.2s;
+
 }
 
 .footer a:hover{
-  text-decoration:underline;
+
+color:#e67e22;
+
+}
+
+.footer-about p{
+
+margin-bottom:14px;
+
+}
+
+.footer-donate-btn{
+
+display:inline-block;
+
+background:#e67e22;
+
+padding:10px 16px;
+
+border-radius:30px;
+
+font-weight:600;
+
+color:white;
+
+}
+
+.footer-donate-btn:hover{
+
+background:#cf6d17;
+
+}
+
+.social{
+
+margin-top:10px;
+
+display:flex;
+
+gap:12px;
+
 }
 
 .footer-bottom{
-  border-top:1px solid #333;
-  margin-top:20px;
-  padding-top:10px;
-  text-align:center;
-  font-size:14px;
+
+border-top:1px solid #333;
+
+margin-top:30px;
+
+padding-top:12px;
+
+text-align:center;
+
+font-size:14px;
+
 }
 
+
+
+
+@media (max-width:600px){
+
+.footer-grid{
+
+grid-template-columns:repeat(2,1fr);
+
+gap:20px;
+
+}
+
+.footer{
+
+padding:40px 16px 10px;
+
+}
+
+}
 /* SEVA MENU */
 
 .seva-menu {
