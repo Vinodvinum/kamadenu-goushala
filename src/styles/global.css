@@ -135,17 +135,18 @@ img{
 
 .navbar{
 
-  background:white;
+  background: linear-gradient(90deg,#ffffff,#fff7ec);
 
-  box-shadow:var(--shadow);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 
-  position:fixed;
+  position: fixed;
   top:0;
   left:0;
   right:0;
-  
 
   z-index:1000;
+
+  border-bottom: 2px solid rgba(230,126,34,0.15);
 
 }
 
@@ -154,32 +155,56 @@ img{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding: auto;
 
-  height:70px;
+  padding:12px 0;
+
+  height:95px;
 
 }
 
-.logo{
+.logo a{
 
-  font-size:22px;
+display:flex;
+align-items:center;
+gap:14px;
 
-  font-weight:600;
+background: white;
 
-  color:var(--primary);
+padding:10px 18px;
+
+border-radius:50px;
+
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
+
+border:1px solid rgba(0,0,0,0.05);
+
+transition:0.3s;
+
+}
+
+.logo a:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 10px 24px rgba(0,0,0,0.12);
 
 }
 
 .logo img{
 
-height:75px;
+height:70px;
 
 }
+
+
 
 .logo span{
 
 font-weight:600;
 color:var(--primary);
+
+font-size:20px;
+letter-spacing:0.3px;
 
 }
 
@@ -193,9 +218,37 @@ color:var(--primary);
 
 .nav-links a{
 
-  color:var(--text-dark);
+color:var(--text-dark);
 
-  font-weight:500;
+font-weight:500;
+
+padding:6px 4px;
+
+position:relative;
+
+}
+
+.nav-links a::after{
+
+content:"";
+
+position:absolute;
+
+bottom:-4px;
+left:0;
+
+width:0;
+height:2px;
+
+background:var(--secondary);
+
+transition:0.3s;
+
+}
+
+.nav-links a:hover::after{
+
+width:100%;
 
 }
 
@@ -341,23 +394,42 @@ color:var(--primary);
 /* ============================= */
 
 .footer{
-
-  background:#2b2b2b;
-
-  color:white;
-
-  padding:40px 0;
-
-  margin-top:50px;
-
+  background:#111;
+  color:#eee;
+  padding:40px 20px 10px;
 }
 
-.footer p{
+.footer-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:30px;
+}
 
+.footer h3,
+.footer h4{
+  margin-bottom:10px;
+}
+
+.footer ul{
+  list-style:none;
+  padding:0;
+}
+
+.footer a{
+  color:#ddd;
+  text-decoration:none;
+}
+
+.footer a:hover{
+  text-decoration:underline;
+}
+
+.footer-bottom{
+  border-top:1px solid #333;
+  margin-top:20px;
+  padding-top:10px;
   text-align:center;
-
-  color:#ccc;
-
+  font-size:14px;
 }
 
 /* SEVA MENU */
@@ -366,6 +438,7 @@ color:var(--primary);
 
 position: relative;
 cursor: pointer;
+padding-bottom: 8px;
 
 }
 
@@ -378,7 +451,7 @@ font-weight: 500;
 .seva-dropdown {
 
 position: absolute;
-top: 35px;
+top: 100%;
 left: 0;
 
 background: white;
@@ -563,4 +636,350 @@ color: #777;
     text-align: center;
     width: 100%;
   }
+}
+
+
+/* ============================= */
+/* WhatsApp Floating Button */
+/* ============================= */
+
+.whatsapp-float {
+
+position: fixed;
+
+bottom: 20px;
+right: 20px;
+
+width: 60px;
+height: 60px;
+
+background: #25D366;
+
+border-radius: 50%;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+font-size: 28px;
+color: white;
+
+box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+
+z-index: 3000;
+
+cursor: pointer;
+
+transition: transform 0.3s;
+
+}
+
+/* Pulse ring */
+
+.whatsapp-float::before {
+
+content: "";
+
+position: absolute;
+
+width: 60px;
+height: 60px;
+
+border-radius: 50%;
+
+background: rgba(37, 211, 102, 0.5);
+
+animation: whatsappPulse 2s infinite;
+
+z-index: -1;
+
+}
+
+/* Hover effect */
+
+.whatsapp-float:hover {
+
+transform: scale(1.12);
+
+}
+
+/* Pulse animation */
+
+@keyframes whatsappPulse {
+
+0% {
+transform: scale(1);
+opacity: 0.6;
+}
+
+70% {
+transform: scale(1.7);
+opacity: 0;
+}
+
+100% {
+transform: scale(1);
+opacity: 0;
+}
+
+}
+
+
+
+
+/* ============================= */
+/* Donate Floating Button */
+/* ============================= */
+
+.donate-float{
+
+position: fixed;
+
+bottom: 95px; /* sits above WhatsApp */
+right: 20px;
+
+width: 60px;
+height: 60px;
+
+background: #e67e22;
+
+border-radius: 50%;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+font-size: 28px;
+color: white;
+
+box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+
+z-index: 3000;
+
+cursor: pointer;
+
+transition: transform 0.3s;
+
+}
+
+.donate-float:hover{
+
+transform: scale(1.12);
+
+}
+
+
+/* ============================= */
+/* Donation Top Bar */
+/* ============================= */
+
+.donation-bar{
+
+background: var(--secondary);
+
+color:white;
+
+font-size:14px;
+
+}
+
+.donation-inner{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:8px 0;
+
+}
+
+.donation-bar-btn{
+
+background:white;
+
+color:var(--secondary);
+
+padding:6px 14px;
+
+border-radius:20px;
+
+font-weight:600;
+
+transition:0.3s;
+
+}
+
+.donation-bar-btn:hover{
+
+background:#fdf2e8;
+
+}
+
+
+/* Gau Seva Donation Popup */
+
+.gau-popup{
+
+position: fixed;
+
+bottom: 95px;
+right: 20px;
+
+background: white;
+border-radius: 50px;
+
+box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+
+padding: 10px 16px;
+
+display: flex;
+align-items: center;
+
+transform: translateY(30px);
+opacity: 0;
+
+transition: all 0.4s ease;
+
+z-index: 4000;
+
+}
+
+.gau-popup.show{
+
+opacity: 1;
+transform: translateY(0);
+
+}
+
+.gau-popup-content{
+
+display:flex;
+align-items:center;
+gap:12px;
+
+color:#333;
+
+}
+
+.gau-icon{
+
+font-size:28px;
+
+background:#fff3e6;
+
+padding:8px;
+
+border-radius:50%;
+
+}
+
+.gau-text{
+
+font-weight:600;
+
+font-size:14px;
+
+}
+
+.gau-text small{
+
+display:block;
+
+font-weight:400;
+
+font-size:12px;
+
+color:#777;
+
+}
+
+
+/* Gau Mata Alert Popup */
+
+.gau-alert-popup{
+
+position: fixed;
+
+bottom: 250px;
+right: 20px;
+
+opacity:0;
+transform: translateY(40px);
+
+transition: all 0.4s ease;
+
+z-index:4000;
+
+}
+
+.gau-alert-popup.show{
+
+opacity:1;
+transform: translateY(0);
+
+}
+
+.gau-alert-card{
+
+display:flex;
+align-items:center;
+
+gap:14px;
+
+background:#fff8f0;
+
+border-left:4px solid #e67e22;
+
+padding:14px 16px;
+
+border-radius:14px;
+
+box-shadow:0 12px 30px rgba(0,0,0,0.18);
+
+max-width:280px;
+
+}
+
+.gau-alert-icon{
+
+font-size:30px;
+
+}
+
+.gau-alert-text strong{
+
+font-size:14px;
+
+color:#333;
+
+}
+
+.gau-alert-text p{
+
+font-size:12px;
+
+margin:4px 0 8px;
+
+color:#666;
+
+}
+
+.gau-alert-btn{
+
+background:#e67e22;
+
+color:white;
+
+padding:6px 12px;
+
+border-radius:20px;
+
+font-size:12px;
+
+font-weight:600;
+
+display:inline-block;
+
 }

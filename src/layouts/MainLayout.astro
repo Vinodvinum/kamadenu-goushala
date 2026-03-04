@@ -12,24 +12,127 @@ const { title = "Kamadenu Goushala" } = Astro.props;
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>{title}</title>
 
 </head>
 
-<body>
+<script>
+
+const gauPopup = document.getElementById("gauPopup");
+
+function showGauPopup(){
+
+if(!gauPopup) return;
+
+gauPopup.classList.add("show");
+
+setTimeout(()=>{
+gauPopup.classList.remove("show");
+},4000);
+
+}
+
+setTimeout(showGauPopup,3000);
+
+setInterval(showGauPopup,10000);
+
+
+
+const gauAlert = document.getElementById("gauAlert");
+
+function showGauAlert(){
+
+if(!gauAlert) return;
+
+gauAlert.classList.add("show");
+
+setTimeout(()=>{
+gauAlert.classList.remove("show");
+},10000);
+
+}
+
+setTimeout(showGauAlert,8000);
+
+setInterval(showGauAlert,60000);
+
+
+</script>
+
+<body> 
 
 <Header />
 
-<main>
 
+
+<main>
 <slot />
 
 </main>
 
+<div class="gau-alert-popup" id="gauAlert">
+
+<div class="gau-alert-card">
+
+<div class="gau-alert-icon">🐄</div>
+
+<div class="gau-alert-text">
+
+<strong>Gau Mata Needs Food Today</strong>
+
+<p>Your small donation helps feed rescued cows 🙏</p>
+
+<a href="/donate" class="gau-alert-btn">
+Donate Gau Seva
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="gau-popup" id="gauPopup">
+
+<a href="/donate" class="gau-popup-content">
+
+<span class="gau-icon">🐄</span>
+
+<span class="gau-text">
+Support Gau Seva 🙏  
+<br>
+<small>Help us care for rescued cows</small>
+</span>
+
+</a>
+
+</div>
+
 <Footer />
+
+
+<a
+href="/donate"
+class="donate-float"
+aria-label="Donate Gau Seva"
+>
+🐄
+</a>
+
+<!-- WhatsApp Floating Button -->
+
+<a
+href="https://wa.me/919448604890?text=🙏 Hello Kamadenu Goushala, I would like to know more about your seva and products."
+class="whatsapp-float"
+target="_blank"
+aria-label="Chat on WhatsApp"
+>
+
+💬
+
+</a>
 
 </body>
 
