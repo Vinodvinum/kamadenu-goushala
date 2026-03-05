@@ -1,38 +1,39 @@
 ---
-import { getCollection } from "astro:content";
+import { getEntry } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
 import { markdownToHtml } from "../../lib/markdown";
 
-export async function getStaticPaths() {
-  const breeds = await getCollection("cows");
-  return breeds.map((breed) => ({
-    params: { slug: breed.slug },
-    props: { breed },
-  }));
+const { slug } = Astro.params;
+const breed = slug ? await getEntry("cows", slug) : undefined;
+
+if (!breed) {
+  Astro.response.status = 404;
 }
 
-const { breed } = Astro.props;
+const breedName = breed?.data.breed_name ?? "Breed Not Found";
 
 const feedLink = `https://wa.me/919448604890?text=${encodeURIComponent(
 `Hello Kamadenu Goushala,
 
-I would like to support daily feeding seva for ${breed.data.breed_name} cows.`
+I would like to support daily feeding seva for ${breedName} cows.`
 )}`;
 
 const adoptLink = `https://wa.me/919448604890?text=${encodeURIComponent(
 `Hello Kamadenu Goushala,
 
-I would like to adopt and support ${breed.data.breed_name} cows.`
+I would like to adopt and support ${breedName} cows.`
 )}`;
 
-const characteristicsHtml = markdownToHtml(breed.data.characteristics);
+const characteristicsHtml = breed ? markdownToHtml(breed.data.characteristics) : "";
 
 function normalizeImage(item: string | { image: string }): string {
   return typeof item === "string" ? item : item.image;
 }
 ---
 
-<MainLayout title={breed.data.breed_name}>
+<MainLayout title={breedName}>
+{breed ? (
+<>
 <section class="section breed-header-section">
 <div class="container">
 <h1 class="section-title">{breed.data.breed_name}</h1>
@@ -97,4 +98,15 @@ class="breed-gallery-image"
 </div>
 </div>
 </section>
+</>
+) : (
+<section class="section">
+<div class="container" style="text-align:center;">
+<h1 class="section-title">Breed Not Found</h1>
+<p>The requested breed page does not exist.</p>
+<br />
+<a href="/cows" class="btn btn-outline">Back to Breeds</a>
+</div>
+</section>
+)}
 </MainLayout>

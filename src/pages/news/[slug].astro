@@ -1,20 +1,21 @@
 ---
-import { getCollection, render } from "astro:content";
+import { getEntry, render } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
 
-export async function getStaticPaths() {
-  const newsItems = await getCollection("news");
-  return newsItems.map((item) => ({
-    params: { slug: item.slug },
-    props: { item },
-  }));
+const { slug } = Astro.params;
+const item = slug ? await getEntry("news", slug) : undefined;
+
+if (!item) {
+  Astro.response.status = 404;
 }
 
-const { item } = Astro.props;
-const { Content } = await render(item);
+const pageTitle = item?.data.title ?? "News Not Found";
+const rendered = item ? await render(item) : null;
+const Content = rendered?.Content;
 ---
 
-<MainLayout title={item.data.title}>
+<MainLayout title={pageTitle}>
+  {item && Content ? (
   <section class="section">
     <div class="container">
       <h1>{item.data.title}</h1>
@@ -35,4 +36,14 @@ const { Content } = await render(item);
       <Content />
     </div>
   </section>
+  ) : (
+  <section class="section">
+    <div class="container" style="text-align:center;">
+      <h1 class="section-title">News Not Found</h1>
+      <p>The requested news article does not exist.</p>
+      <br />
+      <a href="/news" class="btn btn-outline">Back to News</a>
+    </div>
+  </section>
+  )}
 </MainLayout>

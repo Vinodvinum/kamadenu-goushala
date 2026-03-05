@@ -2,8 +2,7 @@ backend:
   name: github
   repo: Vinodvinum/kamadenu-goushala
   branch: main
-  # Replace with your OAuth app deployment URL on Vercel
-  base_url: https://YOUR-OAUTH-APP.vercel.app
+  base_url: https://kamadenu-goushala-admin.vercel.app
   auth_endpoint: auth
 
 publish_mode: editorial_workflow
