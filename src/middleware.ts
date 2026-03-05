@@ -62,11 +62,5 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     return unauthorizedResponse();
   }
 
-  // Support /admin and /admin/ by redirecting to the actual static admin entry file.
-  if (context.url.pathname === "/admin" || context.url.pathname === "/admin/") {
-    const target = new URL("/admin/index.html", context.url);
-    return Response.redirect(target, 302);
-  }
-
   return next();
 };

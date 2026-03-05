@@ -1,0 +1,164 @@
+---
+export const prerender = false;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Kamadhenu Goushala CMS</title>
+    <script>
+      window.CMS_MANUAL_INIT = true;
+      window.CMS_CONFIG = {
+        backend: {
+          name: "github",
+          repo: "Vinodvinum/kamadenu-goushala",
+          branch: "main",
+          base_url: "https://kamadenu-goushala-admin.vercel.app",
+          auth_endpoint: "auth",
+        },
+        publish_mode: "editorial_workflow",
+        media_folder: "public/images/uploads",
+        public_folder: "/images/uploads",
+        collections: [
+          {
+            name: "events",
+            label: "Activities / Events",
+            folder: "src/content/events",
+            create: true,
+            slug: "{{slug}}",
+            extension: "md",
+            format: "frontmatter",
+            fields: [
+              { label: "Title", name: "title", widget: "string" },
+              { label: "Date", name: "date", widget: "datetime" },
+              { label: "Location", name: "location", widget: "string" },
+              { label: "Cover Image", name: "cover_image", widget: "image" },
+              { label: "Description", name: "description", widget: "markdown" },
+            ],
+          },
+          {
+            name: "news",
+            label: "Activities / News",
+            folder: "src/content/news",
+            create: true,
+            slug: "{{slug}}",
+            extension: "md",
+            format: "frontmatter",
+            fields: [
+              { label: "Title", name: "title", widget: "string" },
+              { label: "Date", name: "date", widget: "datetime" },
+              { label: "Cover Image", name: "cover_image", widget: "image" },
+              { label: "Body", name: "body", widget: "markdown" },
+            ],
+          },
+          {
+            name: "gallery",
+            label: "Activities / Gallery",
+            folder: "src/content/gallery",
+            create: true,
+            slug: "{{slug}}",
+            extension: "md",
+            format: "frontmatter",
+            fields: [
+              { label: "Title", name: "title", widget: "string" },
+              {
+                label: "Images",
+                name: "images",
+                widget: "list",
+                field: { label: "Image", name: "image", widget: "image" },
+              },
+            ],
+          },
+          {
+            name: "cows",
+            label: "Highlights / Cow Breeds",
+            folder: "src/content/cows",
+            create: true,
+            slug: "{{slug}}",
+            extension: "md",
+            format: "frontmatter",
+            fields: [
+              { label: "Breed Name", name: "breed_name", widget: "string" },
+              { label: "Origin", name: "origin", widget: "string" },
+              { label: "Characteristics", name: "characteristics", widget: "markdown" },
+              { label: "Milk Quality", name: "milk_quality", widget: "string" },
+              { label: "Agricultural Use", name: "agricultural_use", widget: "string" },
+              { label: "Hero Image", name: "hero_image", widget: "image" },
+              {
+                label: "Gallery Images",
+                name: "gallery_images",
+                widget: "list",
+                field: { label: "Image", name: "image", widget: "image" },
+              },
+            ],
+          },
+          {
+            name: "blogs",
+            label: "Content / Blogs",
+            folder: "src/content/blogs",
+            create: true,
+            slug: "{{slug}}",
+            extension: "md",
+            format: "frontmatter",
+            fields: [
+              { label: "Title", name: "title", widget: "string" },
+              { label: "Author", name: "author", widget: "string" },
+              { label: "Date", name: "date", widget: "datetime" },
+              { label: "Cover Image", name: "cover_image", widget: "image" },
+              { label: "Body", name: "body", widget: "markdown" },
+            ],
+          },
+          {
+            name: "homepage",
+            label: "Content / Homepage",
+            files: [
+              {
+                label: "Homepage",
+                name: "home",
+                file: "src/content/homepage/home.md",
+                fields: [
+                  { label: "Hero Title", name: "hero_title", widget: "string" },
+                  { label: "Hero Description", name: "hero_description", widget: "text" },
+                  { label: "Hero Image", name: "hero_image", widget: "image" },
+                  {
+                    label: "Featured Breeds",
+                    name: "featured_breeds",
+                    widget: "list",
+                    field: { label: "Breed Slug", name: "breed", widget: "string" },
+                  },
+                  {
+                    label: "Featured Events",
+                    name: "featured_events",
+                    widget: "list",
+                    field: { label: "Event Slug", name: "event", widget: "string" },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+    </script>
+    <script src="https://unpkg.com/decap-cms@3.8.3/dist/decap-cms.js"></script>
+  </head>
+  <body>
+    <script>
+      const isLocal =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+
+      const cmsConfig = {
+        ...window.CMS_CONFIG,
+        local_backend: isLocal,
+      };
+
+      window.CMS.init({
+        config: cmsConfig,
+        load_config_file: false,
+      });
+    </script>
+  </body>
+</html>
