@@ -1,57 +1,41 @@
-<section class="hero">
+---
+const {
+  title = "Protecting Gau Mata with Love & Devotion",
+  description = "Kamadenu Goushala rescues, feeds, and shelters abandoned and injured cows. Your support helps us provide food, shelter, and medical care for Gau Mata.",
+  image = "/images/hero/hero.jpg",
+} = Astro.props;
 
-  <div class="container">
-
-    <div class="hero-content">
-
-      <h1>
-        Protecting Gau Mata with Love & Devotion 
-      </h1>
-
-      <p class="hero-sub">
-        Kamadenu Goushala rescues, feeds, and shelters abandoned
-        and injured cows. Your support helps us provide food,
-        shelter, and medical care for Gau Mata.
-      </p>
-
-      <p class="hero-trust">
-        🙏 Serving and protecting sacred cows with devotion
-      </p>
-
-      <div class="hero-buttons">
-
-        <a
-          href={`https://wa.me/919448604890?text=${encodeURIComponent(`🙏 Kamadenu Goushala
+const donateLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+`Hello Kamadenu Goushala,
 
 I would like to make a donation for Gau Seva.
-Please guide me with payment details.`)}`}
-          target="_blank"
-          class="btn btn-primary"
-        >
-          Donate Gau Seva
-        </a>
+Please guide me with payment details.`
+)}`;
+---
 
-        <a href="/cows" class="btn btn-outline">
-          Adopt a Cow
-        </a>
+<section
+  class="hero"
+  style={`background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('${image}') center/cover no-repeat;`}
+>
+  <div class="container">
+    <div class="hero-content">
+      <h1>{title}</h1>
 
+      <p class="hero-sub">{description}</p>
+
+      <p class="hero-trust">Serving and protecting sacred cows with devotion</p>
+
+      <div class="hero-buttons">
+        <a href={donateLink} target="_blank" class="btn btn-primary">Donate Gau Seva</a>
+
+        <a href="/cows" class="btn btn-outline">Adopt a Cow</a>
       </div>
+
       <div class="hero-stats">
-
-    <div>🐄 120+ Cows Protected</div>
-
-    <div>🌾 Daily Feeding</div>
-
-    <div>🙏 Supported by Devotees</div>
-
+        <div>120+ Cows Protected</div>
+        <div>Daily Feeding</div>
+        <div>Supported by Devotees</div>
+      </div>
     </div>
-
-
-    </div>
-
-    
   </div>
-
-  
-
 </section>

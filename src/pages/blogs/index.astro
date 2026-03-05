@@ -26,7 +26,7 @@ const blogs = [...(await getCollection("blogs"))].sort(
                 })}
               </p>
               <br />
-              <a href={`/blog/${blog.slug}`} class="btn btn-outline">Read More</a>
+              <a href={`/blogs/${blog.slug}`} class="btn btn-outline">Read More</a>
             </div>
           </article>
         ))}

@@ -1,43 +1,8 @@
 ---
+import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
 
-const breeds = [
-  {
-    name: "Malenadu Gidda",
-    slug: "malenadu-gidda",
-    image: "/images/cows/malenadu-gidda/1.jpg",
-    summary:
-      "A compact forest-region breed from Karnataka, valued for resilience and rich dung and urine utility.",
-  },
-  {
-    name: "Hallikara",
-    slug: "hallikara",
-    image: "/images/cows/hallikara/1.jpg",
-    summary:
-      "One of Karnataka's classic draught breeds, known for agility, stamina, and cultural importance.",
-  },
-  {
-    name: "Gir",
-    slug: "gir",
-    image: "/images/cows/gir/1.jpg",
-    summary:
-      "A prominent indigenous dairy breed recognized for calm temperament and high-quality A2 milk.",
-  },
-  {
-    name: "Amritamahal",
-    slug: "amritamahal",
-    image: "/images/cows/amritamahal/1.jpg",
-    summary:
-      "A historic Karnataka breed traditionally maintained for endurance and strength in agriculture.",
-  },
-  {
-    name: "Tharparkar",
-    slug: "tharparkar",
-    image: "/images/cows/tharparkar/1.jpg",
-    summary:
-      "A hardy desert-region breed appreciated for dual-purpose value in milk production and field work.",
-  },
-];
+const breeds = await getCollection("cows");
 ---
 
 <MainLayout title="Indigenous Breeds">
@@ -51,8 +16,7 @@ Indigenous Cow Breeds
 </h1>
 
 <p class="section-intro">
-Explore the sacred native breeds protected by Kamadenu Goushala. Click each
-breed to learn its origin, characteristics, and seva opportunities.
+Explore the sacred native breeds protected by Kamadenu Goushala.
 </p>
 
 <div class="breed-sections">
@@ -62,22 +26,26 @@ breeds.map((breed) => (
 
 <article class="card breed-section-card">
 
-<img src={breed.image} alt={breed.name}>
+<img src={breed.data.hero_image} alt={breed.data.breed_name}>
 
 <div class="card-body">
 
 <h2 class="card-title">
-{breed.name}
+{breed.data.breed_name}
 </h2>
 
 <p>
-{breed.summary}
+<strong>Origin:</strong> {breed.data.origin}
+</p>
+
+<p>
+<strong>Milk Quality:</strong> {breed.data.milk_quality}
 </p>
 
 <br>
 
 <a href={`/cows/${breed.slug}`} class="btn btn-outline">
-Adopt {breed.name}
+View Breed
 </a>
 
 </div>

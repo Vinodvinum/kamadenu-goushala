@@ -1,52 +1,102 @@
 backend:
-  name: github
-  repo: Vinodvinum/kamadenu-goushala
+  name: git-gateway
   branch: main
-  base_url: https://YOUR-OAUTH-PROXY-DOMAIN.com
-  auth_endpoint: auth
-  site_domain: YOUR-VERCEL-DOMAIN.vercel.app
 
-# Enable only when running local proxy (`npm run dev:cms`) during local development.
-# local_backend: true
+publish_mode: editorial_workflow
 
-media_folder: "public/images"
-public_folder: "/images"
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
 
 collections:
+  - name: "events"
+    label: "Activities / Events"
+    folder: "src/content/events"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Location", name: "location", widget: "string" }
+      - { label: "Cover Image", name: "cover_image", widget: "image" }
+      - { label: "Description", name: "description", widget: "markdown" }
+
+  - name: "news"
+    label: "Activities / News"
+    folder: "src/content/news"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Cover Image", name: "cover_image", widget: "image" }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "gallery"
+    label: "Activities / Gallery"
+    folder: "src/content/gallery"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - label: "Images"
+        name: "images"
+        widget: "list"
+        field: { label: "Image", name: "image", widget: "image" }
 
   - name: "cows"
-    label: "Cows"
-    folder: "src/data/cows"
+    label: "Highlights / Cow Breeds"
+    folder: "src/content/cows"
     create: true
     slug: "{{slug}}"
-    extension: "json"
-    format: "json"
-
+    extension: "md"
+    format: "frontmatter"
     fields:
-      - { label: "ID", name: "id", widget: "string", required: false }
-      - { label: "Name", name: "name", widget: "string" }
-      - { label: "Slug", name: "slug", widget: "string" }
-      - { label: "Age", name: "age", widget: "string" }
-      - { label: "Breed", name: "breed", widget: "string" }
-      - { label: "Status", name: "status", widget: "string" }
-      - { label: "Sponsor Amount", name: "sponsorAmount", widget: "number", required: false }
-      - { label: "Image", name: "image", widget: "image" }
-      - { label: "Description", name: "description", widget: "text", required: false }
-      - { label: "Story", name: "story", widget: "text" }
+      - { label: "Breed Name", name: "breed_name", widget: "string" }
+      - { label: "Origin", name: "origin", widget: "string" }
+      - { label: "Characteristics", name: "characteristics", widget: "markdown" }
+      - { label: "Milk Quality", name: "milk_quality", widget: "string" }
+      - { label: "Agricultural Use", name: "agricultural_use", widget: "string" }
+      - { label: "Hero Image", name: "hero_image", widget: "image" }
+      - label: "Gallery Images"
+        name: "gallery_images"
+        widget: "list"
+        field: { label: "Image", name: "image", widget: "image" }
 
-  - name: "blog"
-    label: "Blog"
-    folder: "src/data/blog"
+  - name: "blogs"
+    label: "Content / Blogs"
+    folder: "src/content/blogs"
     create: true
     slug: "{{slug}}"
-    extension: "json"
-    format: "json"
-
+    extension: "md"
+    format: "frontmatter"
     fields:
-      - { label: "ID", name: "id", widget: "string", required: false }
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Slug", name: "slug", widget: "string" }
-      - { label: "Date", name: "date", widget: "string" }
-      - { label: "Image", name: "image", widget: "image" }
-      - { label: "Excerpt", name: "excerpt", widget: "text" }
-      - { label: "Content", name: "content", widget: "text" }
+      - { label: "Author", name: "author", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Cover Image", name: "cover_image", widget: "image" }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "homepage"
+    label: "Content / Homepage"
+    files:
+      - label: "Homepage"
+        name: "home"
+        file: "src/content/homepage/home.md"
+        fields:
+          - { label: "Hero Title", name: "hero_title", widget: "string" }
+          - { label: "Hero Description", name: "hero_description", widget: "text" }
+          - { label: "Hero Image", name: "hero_image", widget: "image" }
+          - label: "Featured Breeds"
+            name: "featured_breeds"
+            widget: "list"
+            field: { label: "Breed Slug", name: "breed", widget: "string" }
+          - label: "Featured Events"
+            name: "featured_events"
+            widget: "list"
+            field: { label: "Event Slug", name: "event", widget: "string" }

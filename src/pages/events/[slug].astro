@@ -1,0 +1,41 @@
+---
+import { getCollection } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+import { markdownToHtml } from "../../lib/markdown";
+
+export async function getStaticPaths() {
+  const events = await getCollection("events");
+  return events.map((event) => ({
+    params: { slug: event.slug },
+    props: { event },
+  }));
+}
+
+const { event } = Astro.props;
+const descriptionHtml = markdownToHtml(event.data.description);
+---
+
+<MainLayout title={event.data.title}>
+  <section class="section">
+    <div class="container">
+      <h1>{event.data.title}</h1>
+
+      <p style="font-size:14px; color:#777; margin-top:8px;">
+        {event.data.date.toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        })}
+        | {event.data.location}
+      </p>
+
+      <br />
+
+      <img src={event.data.cover_image} alt={event.data.title} class="detail-image" />
+
+      <br /><br />
+
+      <div set:html={descriptionHtml}></div>
+    </div>
+  </section>
+</MainLayout>

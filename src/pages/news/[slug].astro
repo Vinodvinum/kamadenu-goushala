@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+
+export async function getStaticPaths() {
+  const newsItems = await getCollection("news");
+  return newsItems.map((item) => ({
+    params: { slug: item.slug },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+---
+
+<MainLayout title={item.data.title}>
+  <section class="section">
+    <div class="container">
+      <h1>{item.data.title}</h1>
+      <p style="font-size:14px; color:#777; margin-top:8px;">
+        {item.data.date.toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        })}
+      </p>
+
+      <br />
+
+      <img src={item.data.cover_image} alt={item.data.title} class="detail-image" />
+
+      <br /><br />
+
+      <Content />
+    </div>
+  </section>
+</MainLayout>

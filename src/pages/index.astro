@@ -1,8 +1,35 @@
 ---
+import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
 import Hero from "../components/Hero.astro";
 import Stats from "../components/Stats.astro";
 import DonateSection from "../components/DonateSection.astro";
+
+const [homepageEntries, events, cows] = await Promise.all([
+  getCollection("homepage"),
+  getCollection("events"),
+  getCollection("cows"),
+]);
+
+const homepage = homepageEntries[0]?.data;
+
+const featuredEventSlugs = (homepage?.featured_events ?? []).map((item) =>
+  typeof item === "string" ? item : item.event
+);
+
+const featuredBreedSlugs = (homepage?.featured_breeds ?? []).map((item) =>
+  typeof item === "string" ? item : item.breed
+);
+
+const featuredEvents = featuredEventSlugs.length
+  ? events.filter((event) => featuredEventSlugs.includes(event.slug))
+  : [...events]
+      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+      .slice(0, 3);
+
+const featuredBreeds = featuredBreedSlugs.length
+  ? cows.filter((breed) => featuredBreedSlugs.includes(breed.slug))
+  : cows.slice(0, 5);
 
 const activities = [
   {
@@ -45,100 +72,100 @@ const highlights = [
     image: "/images/hero/hero.jpg",
   },
 ];
-
-const indigenousBreeds = [
-  {
-    title: "Malenadu Gidda",
-    href: "/cows/malenadu-gidda",
-    image: "/images/cows/malenadu-gidda/1.jpg",
-  },
-  {
-    title: "Hallikara",
-    href: "/cows/hallikara",
-    image: "/images/cows/hallikara/1.jpg",
-  },
-  {
-    title: "Gir",
-    href: "/cows/gir",
-    image: "/images/cows/gir/1.jpg",
-  },
-  {
-    title: "Amritamahal",
-    href: "/cows/amritamahal",
-    image: "/images/cows/amritamahal/1.jpg",
-  },
-  {
-    title: "Tharparkar",
-    href: "/cows/tharparkar",
-    image: "/images/cows/tharparkar/1.jpg",
-  },
-];
 ---
 
 <MainLayout title="Kamadenu Goushala">
+  <Hero
+    title={homepage?.hero_title}
+    description={homepage?.hero_description}
+    image={homepage?.hero_image}
+  />
 
-<Hero />
+  <Stats />
 
-<Stats />
+  <DonateSection />
 
-<DonateSection />
-
-<section class="section">
-  <div class="container">
-    <h2 class="section-title">Activities</h2>
-    <div class="grid">
-      {activities.map((item) => (
-        <article class="card">
-          <img src={item.image} alt={item.title} />
-          <div class="card-body">
-            <h3 class="card-title">{item.title}</h3>
-            <p>{item.description}</p>
-            <br />
-            <a href={item.href} class="btn btn-outline">Explore {item.title}</a>
-          </div>
-        </article>
-      ))}
+  <section class="section" style="background:#fff8e8;">
+    <div class="container">
+      <h2 class="section-title">Featured Events</h2>
+      <div class="grid">
+        {featuredEvents.map((event) => (
+          <article class="card">
+            <img src={event.data.cover_image} alt={event.data.title} />
+            <div class="card-body">
+              <h3 class="card-title">{event.data.title}</h3>
+              <p>{event.data.location}</p>
+              <p style="font-size:14px; color:#777;">
+                {event.data.date.toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </p>
+              <br />
+              <a href={`/events/${event.slug}`} class="btn btn-primary">View Event</a>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section" style="background:#fff8e8;">
-  <div class="container">
-    <h2 class="section-title">Highlights</h2>
-    <div class="grid">
-      {highlights.map((item) => (
-        <article class="card">
-          <img src={item.image} alt={item.title} />
-          <div class="card-body">
-            <h3 class="card-title">{item.title}</h3>
-            <p>{item.description}</p>
-            <br />
-            <a href={item.href} class="btn btn-primary">View {item.title}</a>
-          </div>
-        </article>
-      ))}
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Activities</h2>
+      <div class="grid">
+        {activities.map((item) => (
+          <article class="card">
+            <img src={item.image} alt={item.title} />
+            <div class="card-body">
+              <h3 class="card-title">{item.title}</h3>
+              <p>{item.description}</p>
+              <br />
+              <a href={item.href} class="btn btn-outline">Explore {item.title}</a>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section">
-  <div class="container">
-    <h2 class="section-title">Indigenous Breeds Preview</h2>
-    <div class="breed-preview-grid">
-      {indigenousBreeds.map((breed) => (
-        <article class="breed-card">
-          <a href={breed.href}>
-            <img src={breed.image} alt={breed.title} />
-            <h3>{breed.title}</h3>
-          </a>
-        </article>
-      ))}
+  <section class="section" style="background:#fff8e8;">
+    <div class="container">
+      <h2 class="section-title">Highlights</h2>
+      <div class="grid">
+        {highlights.map((item) => (
+          <article class="card">
+            <img src={item.image} alt={item.title} />
+            <div class="card-body">
+              <h3 class="card-title">{item.title}</h3>
+              <p>{item.description}</p>
+              <br />
+              <a href={item.href} class="btn btn-primary">View {item.title}</a>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
+  </section>
 
-    <div class="center-actions">
-      <a href="/cows" class="btn btn-primary">Explore Breeds</a>
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Indigenous Breeds Preview</h2>
+      <div class="breed-preview-grid">
+        {featuredBreeds.map((breed) => (
+          <article class="breed-card">
+            <a href={`/cows/${breed.slug}`}>
+              <img src={breed.data.hero_image} alt={breed.data.breed_name} />
+              <h3>{breed.data.breed_name}</h3>
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <div class="center-actions">
+        <a href="/cows" class="btn btn-primary">Explore Breeds</a>
+      </div>
     </div>
-  </div>
-</section>
-
+  </section>
 </MainLayout>

@@ -1,12 +1,37 @@
 ---
+import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
+
+const events = [...(await getCollection("events"))].sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
 ---
 
 <MainLayout title="Events">
-<section class="section">
-<div class="container">
-<h1 class="section-title">Events</h1>
-<p>Content placeholder for now.</p>
-</div>
-</section>
+  <section class="section">
+    <div class="container">
+      <h1 class="section-title">Events</h1>
+
+      <div class="grid">
+        {events.map((event) => (
+          <article class="card">
+            <img src={event.data.cover_image} alt={event.data.title} />
+            <div class="card-body">
+              <h2 class="card-title">{event.data.title}</h2>
+              <p style="font-size:14px; color:#777;">
+                {event.data.date.toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </p>
+              <p>{event.data.location}</p>
+              <br />
+              <a href={`/events/${event.slug}`} class="btn btn-outline">Read More</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
 </MainLayout>

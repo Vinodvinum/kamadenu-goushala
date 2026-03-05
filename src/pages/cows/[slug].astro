@@ -1,103 +1,100 @@
 ---
+import { getCollection } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
-import { getAllCows } from "../../lib/content.js";
+import { markdownToHtml } from "../../lib/markdown";
 
 export async function getStaticPaths() {
-  const cows = await getAllCows();
-  return cows.map((cow) => ({
-    params: { slug: cow.slug },
-    props: { cow },
+  const breeds = await getCollection("cows");
+  return breeds.map((breed) => ({
+    params: { slug: breed.slug },
+    props: { breed },
   }));
 }
 
-const { cow } = Astro.props;
+const { breed } = Astro.props;
 
 const feedLink = `https://wa.me/919448604890?text=${encodeURIComponent(
-`🙏 Kamadenu Goushala
+`Hello Kamadenu Goushala,
 
-I would like to support daily feeding seva for:
-🐄 ${cow.name}
-
-Please guide me with the process.`
+I would like to support daily feeding seva for ${breed.data.breed_name} cows.`
 )}`;
 
 const adoptLink = `https://wa.me/919448604890?text=${encodeURIComponent(
-`🙏 Kamadenu Goushala
+`Hello Kamadenu Goushala,
 
-I would like to adopt this cow:
-🐄 ${cow.name}
-
-Please share monthly adoption details.`
+I would like to adopt and support ${breed.data.breed_name} cows.`
 )}`;
+
+const characteristicsHtml = markdownToHtml(breed.data.characteristics);
+
+function normalizeImage(item: string | { image: string }): string {
+  return typeof item === "string" ? item : item.image;
+}
 ---
 
-<MainLayout title={cow.name}>
-
-<section class="section">
-
+<MainLayout title={breed.data.breed_name}>
+<section class="section breed-header-section">
 <div class="container">
-
-<div class="detail-grid">
-
-<div>
-
-<img
-src={cow.image}
-class="detail-image"
-alt={cow.name}>
-
+<h1 class="section-title">{breed.data.breed_name}</h1>
+<img src={breed.data.hero_image} alt={breed.data.breed_name} class="breed-hero-image" />
 </div>
-
-
-<div>
-
-<h1>
-{cow.name}
-</h1>
-
-<p>
-Age: {cow.age}
-</p>
-
-<p>
-Breed: {cow.breed}
-</p>
-
-<p>
-Status: {cow.status}
-</p>
-
-<br>
-
-<p>
-{cow.story}
-</p>
-
-<br>
-
-<div class="cow-card-actions">
-<a
-href={feedLink}
-target="_blank"
-class="btn btn-primary">
-Feed a Cow
-</a>
-
-<a
-href={adoptLink}
-target="_blank"
-class="btn btn-outline">
-Adopt this Cow
-</a>
-</div>
-
-</div>
-
-
-</div>
-
-</div>
-
 </section>
 
+<section class="section">
+<div class="container">
+<h2 class="section-title">Characteristics</h2>
+
+<div class="grid">
+<article class="card">
+<div class="card-body">
+<h3 class="card-title">Origin</h3>
+<p>{breed.data.origin}</p>
+</div>
+</article>
+
+<article class="card">
+<div class="card-body">
+<h3 class="card-title">Physical Traits</h3>
+<div set:html={characteristicsHtml}></div>
+</div>
+</article>
+
+<article class="card">
+<div class="card-body">
+<h3 class="card-title">Milk Quality</h3>
+<p>{breed.data.milk_quality}</p>
+</div>
+</article>
+
+<article class="card">
+<div class="card-body">
+<h3 class="card-title">Agricultural Value</h3>
+<p>{breed.data.agricultural_use}</p>
+</div>
+</article>
+</div>
+
+<div class="cow-card-actions breed-action-buttons">
+<a href={feedLink} target="_blank" class="btn btn-primary">Feed a Cow</a>
+<a href={adoptLink} target="_blank" class="btn btn-outline">Adopt a Cow</a>
+</div>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+<h2 class="section-title">Cow Gallery</h2>
+<div class="grid">
+{breed.data.gallery_images.map((image, index) => (
+<article class="card">
+<img
+src={normalizeImage(image)}
+alt={`${breed.data.breed_name} ${index + 1}`}
+class="breed-gallery-image"
+/>
+</article>
+))}
+</div>
+</div>
+</section>
 </MainLayout>
