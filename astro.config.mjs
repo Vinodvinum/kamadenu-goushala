@@ -1,8 +1,11 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
+import vercel from "@astrojs/vercel";
 
 export default defineConfig({
+  output: "server",
+  adapter: vercel(),
   site: "https://kamadenugoushala.org",
   server: {
-    port: 4321
-  }
+    port: 4321,
+  },
 });

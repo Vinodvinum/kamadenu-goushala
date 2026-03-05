@@ -1,11 +1,18 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: Vinodvinum/kamadenu-goushala
   branch: main
+  # Replace with your OAuth app deployment URL on Vercel
+  base_url: https://YOUR-OAUTH-APP.vercel.app
+  auth_endpoint: auth
 
 publish_mode: editorial_workflow
 
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
+
+# Local testing without GitHub OAuth (run `npm run dev:cms` in a second terminal)
+local_backend: true
 
 collections:
   - name: "events"
