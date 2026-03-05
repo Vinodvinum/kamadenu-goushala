@@ -1,0 +1,49 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+const highlightItems = [
+  {
+    title: "Havana",
+    description: "Sacred havana offerings and spiritual fire rituals.",
+    href: "/havana",
+    image: "/images/about/goushala.jpg",
+  },
+  {
+    title: "Indigenous Breeds",
+    description: "Explore Malenadu Gidda, Hallikara, Gir, Amritamahal, and Tharparkar.",
+    href: "/cows",
+    image: "/images/cows/gir/1.jpg",
+  },
+  {
+    title: "Astrology",
+    description: "Vedic astrology insights aligned with spiritual life.",
+    href: "/astrology",
+    image: "/images/hero/hero.jpg",
+  },
+];
+---
+
+<MainLayout title="Highlights">
+<section class="section">
+<div class="container">
+<h1 class="section-title">Highlights</h1>
+
+<div class="grid">
+{
+highlightItems.map((item) => (
+<article class="card">
+<img src={item.image} alt={item.title}>
+<div class="card-body">
+<h2 class="card-title">{item.title}</h2>
+<p>{item.description}</p>
+<br>
+<a href={item.href} class="btn btn-outline">View {item.title}</a>
+</div>
+</article>
+))
+}
+</div>
+
+</div>
+</section>
+</MainLayout>

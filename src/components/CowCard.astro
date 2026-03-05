@@ -1,5 +1,13 @@
 ---
 const { cow } = Astro.props;
+const adoptLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+`🙏 Kamadenu Goushala
+
+I would like to adopt and support:
+🐄 ${cow.name}
+
+Please guide me with monthly adoption details.`
+)}`;
 ---
 
 <div class="card">
@@ -38,11 +46,11 @@ View Details
 </a>
 
 <a
-href="https://rzp.io/l/abc123"
+href={adoptLink}
 target="_blank"
 class="btn btn-primary">
 
-Sponsor Cow
+Adopt Cow
 
 </a>
 </div>

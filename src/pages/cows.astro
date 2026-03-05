@@ -1,30 +1,88 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
-import CowCard from "../components/CowCard.astro";
-import { getAllCows } from "../lib/content.js";
 
-const cows = await getAllCows();
+const breeds = [
+  {
+    name: "Malenadu Gidda",
+    slug: "malenadu-gidda",
+    image: "/images/cows/malenadu-gidda/1.jpg",
+    summary:
+      "A compact forest-region breed from Karnataka, valued for resilience and rich dung and urine utility.",
+  },
+  {
+    name: "Hallikara",
+    slug: "hallikara",
+    image: "/images/cows/hallikara/1.jpg",
+    summary:
+      "One of Karnataka's classic draught breeds, known for agility, stamina, and cultural importance.",
+  },
+  {
+    name: "Gir",
+    slug: "gir",
+    image: "/images/cows/gir/1.jpg",
+    summary:
+      "A prominent indigenous dairy breed recognized for calm temperament and high-quality A2 milk.",
+  },
+  {
+    name: "Amritamahal",
+    slug: "amritamahal",
+    image: "/images/cows/amritamahal/1.jpg",
+    summary:
+      "A historic Karnataka breed traditionally maintained for endurance and strength in agriculture.",
+  },
+  {
+    name: "Tharparkar",
+    slug: "tharparkar",
+    image: "/images/cows/tharparkar/1.jpg",
+    summary:
+      "A hardy desert-region breed appreciated for dual-purpose value in milk production and field work.",
+  },
+];
 ---
 
-<MainLayout title="Our Cows">
+<MainLayout title="Indigenous Breeds">
 
 <section class="section">
 
 <div class="container">
 
 <h1 class="section-title">
-
-Our Cows
-
+Indigenous Cow Breeds
 </h1>
 
+<p class="section-intro">
+Explore the sacred native breeds protected by Kamadenu Goushala. Click each
+breed to learn its origin, characteristics, and seva opportunities.
+</p>
 
-<div class="grid">
+<div class="breed-sections">
 
 {
-cows.map(cow => (
+breeds.map((breed) => (
 
-<CowCard cow={cow} />
+<article class="card breed-section-card">
+
+<img src={breed.image} alt={breed.name}>
+
+<div class="card-body">
+
+<h2 class="card-title">
+{breed.name}
+</h2>
+
+<p>
+{breed.summary}
+</p>
+
+<br>
+
+<a href={`/cows/${breed.slug}`} class="btn btn-outline">
+Adopt {breed.name}
+</a>
+
+</div>
+
+</article>
 
 ))
 }

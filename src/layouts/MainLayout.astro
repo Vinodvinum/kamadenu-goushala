@@ -5,6 +5,12 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
 const { title = "Kamadenu Goushala" } = Astro.props;
+const donateWhatsAppLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+`🙏 Kamadenu Goushala
+
+I would like to donate for Gau Seva.
+Please guide me with payment details.`
+)}`;
 ---
 
 <html lang="en">
@@ -84,7 +90,7 @@ setInterval(showGauAlert,60000);
 
 <p>Your small donation helps feed rescued cows 🙏</p>
 
-<a href="/donate" class="gau-alert-btn">
+<a href={donateWhatsAppLink} target="_blank" class="gau-alert-btn">
 Donate Gau Seva
 </a>
 
@@ -96,7 +102,7 @@ Donate Gau Seva
 
 <div class="gau-popup" id="gauPopup">
 
-<a href="/donate" class="gau-popup-content">
+<a href={donateWhatsAppLink} target="_blank" class="gau-popup-content">
 
 <span class="gau-icon">🐄</span>
 
@@ -114,7 +120,8 @@ Support Gau Seva 🙏
 
 
 <a
-href="/donate"
+href={donateWhatsAppLink}
+target="_blank"
 class="donate-float"
 aria-label="Donate Gau Seva"
 >

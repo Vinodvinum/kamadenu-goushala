@@ -3,7 +3,76 @@ import MainLayout from "../layouts/MainLayout.astro";
 import Hero from "../components/Hero.astro";
 import Stats from "../components/Stats.astro";
 import DonateSection from "../components/DonateSection.astro";
-import Activities from "../components/Activities.astro";
+
+const activities = [
+  {
+    title: "Events",
+    description: "Join upcoming temple programs, gau seva drives, and community gatherings.",
+    href: "/events",
+    image: "/images/events/1.jpg",
+  },
+  {
+    title: "News",
+    description: "Read updates about rescue work, goshala milestones, and field outreach.",
+    href: "/news",
+    image: "/images/activities/1.jpg",
+  },
+  {
+    title: "Gallery",
+    description: "See moments from daily care, cow shelter life, and devotional activities.",
+    href: "/gallery",
+    image: "/images/gallery/1.jpg",
+  },
+];
+
+const highlights = [
+  {
+    title: "Havana",
+    description: "Learn about sacred havana offerings and spiritual activities at the goshala.",
+    href: "/havana",
+    image: "/images/about/goushala.jpg",
+  },
+  {
+    title: "Indigenous Breeds",
+    description: "Explore native cow breeds and their role in dharmic and agricultural life.",
+    href: "/cows",
+    image: "/images/cows/gir/1.jpg",
+  },
+  {
+    title: "Astrology",
+    description: "Explore Vedic astrology based guidance connected to seva and tradition.",
+    href: "/astrology",
+    image: "/images/hero/hero.jpg",
+  },
+];
+
+const indigenousBreeds = [
+  {
+    title: "Malenadu Gidda",
+    href: "/cows/malenadu-gidda",
+    image: "/images/cows/malenadu-gidda/1.jpg",
+  },
+  {
+    title: "Hallikara",
+    href: "/cows/hallikara",
+    image: "/images/cows/hallikara/1.jpg",
+  },
+  {
+    title: "Gir",
+    href: "/cows/gir",
+    image: "/images/cows/gir/1.jpg",
+  },
+  {
+    title: "Amritamahal",
+    href: "/cows/amritamahal",
+    image: "/images/cows/amritamahal/1.jpg",
+  },
+  {
+    title: "Tharparkar",
+    href: "/cows/tharparkar",
+    image: "/images/cows/tharparkar/1.jpg",
+  },
+];
 ---
 
 <MainLayout title="Kamadenu Goushala">
@@ -14,6 +83,62 @@ import Activities from "../components/Activities.astro";
 
 <DonateSection />
 
-<Activities />
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Activities</h2>
+    <div class="grid">
+      {activities.map((item) => (
+        <article class="card">
+          <img src={item.image} alt={item.title} />
+          <div class="card-body">
+            <h3 class="card-title">{item.title}</h3>
+            <p>{item.description}</p>
+            <br />
+            <a href={item.href} class="btn btn-outline">Explore {item.title}</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:#fff8e8;">
+  <div class="container">
+    <h2 class="section-title">Highlights</h2>
+    <div class="grid">
+      {highlights.map((item) => (
+        <article class="card">
+          <img src={item.image} alt={item.title} />
+          <div class="card-body">
+            <h3 class="card-title">{item.title}</h3>
+            <p>{item.description}</p>
+            <br />
+            <a href={item.href} class="btn btn-primary">View {item.title}</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Indigenous Breeds Preview</h2>
+    <div class="breed-preview-grid">
+      {indigenousBreeds.map((breed) => (
+        <article class="breed-card">
+          <a href={breed.href}>
+            <img src={breed.image} alt={breed.title} />
+            <h3>{breed.title}</h3>
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <div class="center-actions">
+      <a href="/cows" class="btn btn-primary">Explore Breeds</a>
+    </div>
+  </div>
+</section>
 
 </MainLayout>

@@ -41,7 +41,7 @@ STEP 1.1 — Create Razorpay account
 
 Go to:
 
-https://razorpay.com
+https://example.com/payments
 
 Create account → complete KYC.
 
@@ -56,7 +56,7 @@ Amount: ₹501
 
 Razorpay gives link like:
 
-https://rzp.io/l/abc123
+https://example.com/donate
 
 Copy it.
 
@@ -78,7 +78,7 @@ Donate Now
 Replace with:
 
 <a
-href="https://rzp.io/l/abc123"
+href="https://example.com/donate"
 target="_blank"
 class="btn btn-primary">
 
@@ -106,7 +106,7 @@ Adopt / Sponsor
 Replace:
 
 <a
-href="https://rzp.io/l/abc123"
+href="https://example.com/donate"
 target="_blank"
 class="btn btn-primary">
 
@@ -126,7 +126,7 @@ src/components/ProductCard.astro
 Replace WhatsApp button with:
 
 <a
-href="https://rzp.io/l/abc123"
+href="https://example.com/donate"
 target="_blank"
 class="btn btn-primary">
 
@@ -304,7 +304,7 @@ View Details
 </a>
 
 <a
-href="https://rzp.io/l/abc123"
+href="https://example.com/donate"
 target="_blank"
 class="btn btn-primary">
 
@@ -398,7 +398,7 @@ Status: {cow.status}
 <br>
 
 <a
-href="https://rzp.io/l/abc123"
+href="https://example.com/donate"
 target="_blank"
 class="btn btn-primary">
 
@@ -863,7 +863,7 @@ description:
 "Organic dung cakes for pooja.",
 
 paymentLink:
-"https://rzp.io/l/yourlink"
+"https://example.com/donate"
 
 }
 

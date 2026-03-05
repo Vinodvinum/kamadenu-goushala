@@ -1,5 +1,33 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
+
+const feedOneCowLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+`🙏 Kamadenu Goushala
+
+I would like to donate for Feed One Cow seva (₹51).
+Please guide me with payment details.`
+)}`;
+
+const feedTenCowsLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+`🙏 Kamadenu Goushala
+
+I would like to donate for Feed 10 Cows seva (₹501).
+Please guide me with payment details.`
+)}`;
+
+const fullDaySevaLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+`🙏 Kamadenu Goushala
+
+I would like to donate for Full Day Feeding Seva (₹2001).
+Please guide me with payment details.`
+)}`;
+
+const customDonationLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+`🙏 Kamadenu Goushala
+
+I would like to make a custom donation for Gau Seva.
+Please guide me with payment details.`
+)}`;
 ---
 
 <MainLayout title="Donate">
@@ -42,7 +70,8 @@ Provide food for one cow for a day.
 
 <br>
 
-<a href="#"
+<a href={feedOneCowLink}
+target="_blank"
 class="btn btn-primary">
 
 Donate Now
@@ -74,7 +103,8 @@ Support feeding seva for multiple cows.
 
 <br>
 
-<a href="#"
+<a href={feedTenCowsLink}
+target="_blank"
 class="btn btn-primary">
 
 Donate Now
@@ -106,7 +136,8 @@ Sponsor feeding for all cows for one day.
 
 <br>
 
-<a href="#"
+<a href={fullDaySevaLink}
+target="_blank"
 class="btn btn-primary">
 
 Donate Now
@@ -132,13 +163,14 @@ Custom Donation
 </h2>
 
 <p>
-Donate any amount using UPI or contact us directly.
+Donate any amount and we will guide you on WhatsApp.
 </p>
 
 <br>
 
 <a
-href="https://wa.me/919000000000"
+href={customDonationLink}
+target="_blank"
 class="btn btn-outline">
 
 Contact for Donation

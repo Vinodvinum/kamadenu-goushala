@@ -186,7 +186,7 @@ href="upi://pay?pa=yourupi@bank&pn=KamadenuGoushala"
 
 OR Razorpay payment link:
 
-href="https://rzp.io/l/yourlink"
+href="https://example.com/donate"
 
 OR WhatsApp:
 

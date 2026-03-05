@@ -1,8 +1,16 @@
+---
+const donateWhatsAppLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+`Hello Kamadenu Goushala,
+
+I would like to donate for Gau Seva.
+Please guide me with payment details.`
+)}`;
+---
+
 <footer class="footer">
 
 <div class="container footer-grid">
 
-<!-- About -->
 <div class="footer-col footer-about">
 
 <h3>Kamadenu Goushala</h3>
@@ -13,14 +21,12 @@ Your support helps us provide food, shelter, and medical care
 to rescued and protected cows.
 </p>
 
-<a href="/donate" class="footer-donate-btn">
-🐄 Donate for Gau Seva
+<a href={donateWhatsAppLink} target="_blank" class="footer-donate-btn">
+Donate for Gau Seva
 </a>
 
 </div>
 
-
-<!-- Quick Links -->
 <div class="footer-col">
 
 <h4>Quick Links</h4>
@@ -36,16 +42,14 @@ to rescued and protected cows.
 
 </div>
 
-
-<!-- Seva -->
 <div class="footer-col">
 
 <h4>Seva</h4>
 
 <ul>
-<li><a href="/donate">Feed a Cow</a></li>
+<li><a href={donateWhatsAppLink} target="_blank">Feed a Cow</a></li>
 <li><a href="/cows">Adopt a Cow</a></li>
-<li><a href="/donate">Sponsor a Cow</a></li>
+<li><a href="/cows">Sponsor a Cow</a></li>
 </ul>
 
 <h4 class="footer-sub">Legal</h4>
@@ -57,16 +61,14 @@ to rescued and protected cows.
 
 </div>
 
-
-<!-- Contact -->
 <div class="footer-col footer-contact">
 
 <h4>Contact Us</h4>
 
-<p>📧 info@kamadenugoushala.org</p>
-<p>📞 +91 9448604890</p>
+<p>info@kamadenugoushala.org</p>
+<p>+91 9448604890</p>
 <p>
-📍Kamadhenu Goushala, #336, "Sri Rama Nilaya", Kavadi, Ammathi, Kavadi, Karnataka 571211
+Kamadhenu Goushala, #336, "Sri Rama Nilaya", Kavadi, Ammathi, Kavadi, Karnataka 571211
 </p>
 
 <div class="social">
@@ -85,11 +87,10 @@ WhatsApp
 
 </div>
 
-
 <div class="footer-bottom">
 
 <p>
-© {new Date().getFullYear()} Kamadenu Goushala  
+&copy; {new Date().getFullYear()} Kamadenu Goushala
 Serving Gau Mata with devotion
 </p>
 

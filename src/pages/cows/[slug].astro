@@ -11,6 +11,24 @@ export async function getStaticPaths() {
 }
 
 const { cow } = Astro.props;
+
+const feedLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+`🙏 Kamadenu Goushala
+
+I would like to support daily feeding seva for:
+🐄 ${cow.name}
+
+Please guide me with the process.`
+)}`;
+
+const adoptLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+`🙏 Kamadenu Goushala
+
+I would like to adopt this cow:
+🐄 ${cow.name}
+
+Please share monthly adoption details.`
+)}`;
 ---
 
 <MainLayout title={cow.name}>
@@ -57,14 +75,21 @@ Status: {cow.status}
 
 <br>
 
+<div class="cow-card-actions">
 <a
-href="https://rzp.io/l/abc123"
+href={feedLink}
 target="_blank"
 class="btn btn-primary">
-
-Sponsor this Cow
-
+Feed a Cow
 </a>
+
+<a
+href={adoptLink}
+target="_blank"
+class="btn btn-outline">
+Adopt this Cow
+</a>
+</div>
 
 </div>
 

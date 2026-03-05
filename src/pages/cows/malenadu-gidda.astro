@@ -1,0 +1,22 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import BreedProfilePage from "../../components/BreedProfilePage.astro";
+
+const galleryImages = [
+  "/images/cows/malenadu-gidda/1.jpg",
+  "/images/cows/malenadu-gidda/2.jpg",
+  "/images/cows/malenadu-gidda/3.jpg",
+];
+---
+
+<MainLayout title="Malenadu Gidda">
+  <BreedProfilePage
+    breedName="Malenadu Gidda"
+    heroImage="/images/cows/malenadu-gidda/1.jpg"
+    origin="Native to the hilly Malnad region of Karnataka, traditionally raised in forest-fringe and small-farm ecosystems."
+    physicalTraits="Small, compact body with short stature, agile movement, and high adaptability to heavy rainfall and rugged terrain."
+    milkQuality="Produces modest quantities of nutrient-rich milk commonly valued in traditional households for digestibility."
+    agriculturalValue="Well suited for low-input farming systems; dung and urine are widely used in organic agriculture preparations."
+    galleryImages={galleryImages}
+  />
+</MainLayout>

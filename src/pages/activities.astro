@@ -1,0 +1,49 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+const activityItems = [
+  {
+    title: "Events",
+    description: "Temple programs, seva drives, and spiritual gatherings.",
+    href: "/events",
+    image: "/images/events/1.jpg",
+  },
+  {
+    title: "News",
+    description: "Latest updates from Kamadenu Goushala and rescue work.",
+    href: "/news",
+    image: "/images/activities/1.jpg",
+  },
+  {
+    title: "Gallery",
+    description: "Moments from goshala life, seva, and cow care.",
+    href: "/gallery",
+    image: "/images/gallery/1.jpg",
+  },
+];
+---
+
+<MainLayout title="Activities">
+<section class="section">
+<div class="container">
+<h1 class="section-title">Activities</h1>
+
+<div class="grid">
+{
+activityItems.map((item) => (
+<article class="card">
+<img src={item.image} alt={item.title}>
+<div class="card-body">
+<h2 class="card-title">{item.title}</h2>
+<p>{item.description}</p>
+<br>
+<a href={item.href} class="btn btn-outline">View {item.title}</a>
+</div>
+</article>
+))
+}
+</div>
+
+</div>
+</section>
+</MainLayout>

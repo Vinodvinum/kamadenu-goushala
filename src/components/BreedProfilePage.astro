@@ -1,0 +1,88 @@
+---
+const {
+  breedName,
+  heroImage,
+  origin,
+  physicalTraits,
+  milkQuality,
+  agriculturalValue,
+  galleryImages = [],
+} = Astro.props;
+
+const baseMessage = `🙏 Kamadenu Goushala
+
+I would like to support ${breedName} seva.`;
+
+const feedLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+  `${baseMessage}
+
+Please guide me to Feed a Cow.`
+)}`;
+
+const adoptLink = `https://wa.me/919448604890?text=${encodeURIComponent(
+  `${baseMessage}
+
+Please share monthly Adopt a Cow details.`
+)}`;
+---
+
+<section class="section breed-header-section">
+  <div class="container">
+    <h1 class="section-title">{breedName}</h1>
+    <img src={heroImage} alt={breedName} class="breed-hero-image" />
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Characteristics</h2>
+
+    <div class="grid">
+      <article class="card">
+        <div class="card-body">
+          <h3 class="card-title">Origin</h3>
+          <p>{origin}</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <h3 class="card-title">Physical Traits</h3>
+          <p>{physicalTraits}</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <h3 class="card-title">Milk Quality</h3>
+          <p>{milkQuality}</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <h3 class="card-title">Agricultural Value</h3>
+          <p>{agriculturalValue}</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="cow-card-actions breed-action-buttons">
+      <a href={feedLink} target="_blank" class="btn btn-primary">Feed a Cow</a>
+      <a href={adoptLink} target="_blank" class="btn btn-outline">Adopt a Cow</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Cow Gallery</h2>
+    <div class="grid">
+      {galleryImages.map((image, index) => (
+        <article class="card">
+          <img src={image} alt={`${breedName} ${index + 1}`} class="breed-gallery-image" />
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
