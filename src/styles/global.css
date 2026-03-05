@@ -1222,19 +1222,6 @@ color:#6b8e23;
 
 /* Cow breeds */
 
-.breed-card{
-
-background:white;
-
-border-radius:12px;
-
-overflow:hidden;
-
-text-align:center;
-
-box-shadow:0 6px 20px rgba(0,0,0,0.08);
-
-}
 
 .breed-card img{
 
@@ -1292,7 +1279,7 @@ margin-bottom:10px;
 
 background:
 linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)),
-url("/images/about/hero.jpg") center/cover fixed no-repeat;
+url("/images/about/hero.jpg") center/cover no-repeat;
 
 padding:160px 0;
 
@@ -1422,5 +1409,28 @@ object-fit:cover;
 padding:14px;
 
 text-align:center;
+
+}
+
+
+main{
+margin-top:95px;
+}
+
+
+.card,
+.breed-card,
+.team-member img{
+
+will-change: transform;
+
+}
+
+
+@media (max-width:800px){
+
+.about-grid{
+grid-template-columns:1fr;
+}
 
 }
