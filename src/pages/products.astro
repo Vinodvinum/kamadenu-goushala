@@ -18,6 +18,10 @@ Gou Products
 
 </h1>
 
+<p class="section-intro">
+Our Gou products are prepared through traditional methods rooted in seva, purity, and natural living.
+</p>
+
 
 <div class="grid">
 
@@ -34,6 +38,26 @@ products.map(product => (
 
 </div>
 
+</section>
+
+<section class="section">
+<div class="container">
+<h2 class="section-title">Making Process</h2>
+
+<div class="grid">
+{
+products.map((product) => (
+<article class="card">
+<div class="card-body">
+<h3 class="card-title">{product.name} - Making Process</h3>
+<p>{product.process}</p>
+</div>
+</article>
+))
+}
+</div>
+
+</div>
 </section>
 
 </MainLayout>

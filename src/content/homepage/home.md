@@ -1,6 +1,6 @@
 ---
 hero_title: "Protecting Gau Mata with Love & Devotion"
-hero_description: "Kamadenu Goushala rescues, feeds, and shelters abandoned and injured cows. Your support helps us provide food, shelter, and medical care for Gau Mata."
+hero_description: "Kamadhenu Goushala is dedicated to protecting indigenous Indian cow breeds and promoting sustainable agriculture practices rooted in our ancient traditions."
 hero_image: "/images/hero/hero.jpg"
 featured_breeds:
   - "malenadu-gidda"

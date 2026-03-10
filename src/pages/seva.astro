@@ -1,0 +1,112 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+const coreSeva = [
+  {
+    title: "Feed a Cow",
+    description: "Support daily feeding seva for cows under our care.",
+    href: "/donate",
+    cta: "Feed a Cow",
+  },
+  {
+    title: "Adopt a Cow",
+    description: "Support full monthly care and protection for a rescued cow.",
+    href: "/cows",
+    cta: "Adopt a Cow",
+  },
+];
+
+const sevaTypes = ["Gou Pooja", "Gou Graasa", "Gou Bandhu"];
+
+const offerings = [
+  {
+    id: "pooja-1",
+    label: "Pooja 1",
+    title: "Deepawali Gou Pooja Seva",
+    amount: "Rs 500",
+  },
+  {
+    id: "pooja-2",
+    label: "Pooja 2",
+    title: "Savatsa Gou Daana Seva",
+    amount: "Rs 15000",
+  },
+  {
+    id: "pooja-3",
+    label: "Pooja 3",
+    title: "Gou Pooja and Gou Graas Seva",
+    amount: "Rs 4500",
+  },
+];
+
+function sevaWhatsAppLink(title: string, amount: string) {
+  return `https://wa.me/919448604890?text=${encodeURIComponent(
+    `Namaste Kamadenu Goushala,
+
+I would like to offer seva for:
+${title}
+Amount: ${amount}
+
+Please guide me with payment details.`
+  )}`;
+}
+---
+
+<MainLayout title="Seva">
+  <section class="section">
+    <div class="container">
+      <h1 class="section-title">Seva Offerings</h1>
+      <p class="section-intro">
+        Support Gau Mata through seva paths rooted in devotion and dharma.
+      </p>
+      <div class="grid">
+        {coreSeva.map((item) => (
+          <article class="card">
+            <div class="card-body">
+              <h3 class="card-title">{item.title}</h3>
+              <p>{item.description}</p>
+              <br />
+              <a href={item.href} class="btn btn-primary">{item.cta}</a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <br />
+      <div class="grid">
+        {sevaTypes.map((item) => (
+          <article class="card">
+            <div class="card-body" style="text-align:center;">
+              <h3 class="card-title">{item}</h3>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Pooja Seva Plans</h2>
+      <div class="grid">
+        {offerings.map((item) => (
+          <article class="card">
+            <div class="card-body">
+              <p style="font-weight:600; color:#6b8e23;">{item.label}</p>
+              <h3 class="card-title">{item.title}</h3>
+              <p style="font-weight:600; color:#e67e22;">{item.amount}</p>
+              <br />
+              <a
+                href={sevaWhatsAppLink(item.title, item.amount)}
+                target="_blank"
+                class="btn btn-primary"
+              >
+                WhatsApp
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>

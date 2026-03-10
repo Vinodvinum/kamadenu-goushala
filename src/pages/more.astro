@@ -1,0 +1,43 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+const moreItems = [
+  {
+    title: "Activities",
+    description: "Events, news, and gallery updates from Kamadhenu Goushala.",
+    href: "/activities",
+  },
+  {
+    title: "Highlights",
+    description: "Havan, indigenous breeds, and astrology guidance.",
+    href: "/highlights",
+  },
+  {
+    title: "Blogs",
+    description: "Stories, seva journeys, and latest updates from the goshala.",
+    href: "/blogs",
+  },
+];
+---
+
+<MainLayout title="More">
+  <section class="section">
+    <div class="container">
+      <h1 class="section-title">More</h1>
+      <p class="section-intro">Explore additional sections of the Kamadhenu Goushala website.</p>
+
+      <div class="grid">
+        {moreItems.map((item) => (
+          <article class="card">
+            <div class="card-body">
+              <h2 class="card-title">{item.title}</h2>
+              <p>{item.description}</p>
+              <br />
+              <a href={item.href} class="btn btn-outline">View {item.title}</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>
