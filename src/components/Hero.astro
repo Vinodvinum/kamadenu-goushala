@@ -4,13 +4,6 @@ const {
   description = "Kamadenu Goushala rescues, feeds, and shelters abandoned and injured cows. Your support helps us provide food, shelter, and medical care for Gau Mata.",
   image = "/images/hero/hero.jpg",
 } = Astro.props;
-
-const donateLink = `https://wa.me/919448604890?text=${encodeURIComponent(
-`Hello Kamadenu Goushala,
-
-I would like to make a donation for Gau Seva.
-Please guide me with payment details.`
-)}`;
 ---
 
 <section
@@ -26,7 +19,7 @@ Please guide me with payment details.`
       <p class="hero-trust">Serving and protecting sacred cows with devotion</p>
 
       <div class="hero-buttons">
-        <a href={donateLink} target="_blank" class="btn btn-primary">Donate Gau Seva</a>
+        <a href="/donate" class="btn btn-primary">Feed a Cow</a>
 
         <a href="/cows" class="btn btn-outline">Adopt a Cow</a>
       </div>

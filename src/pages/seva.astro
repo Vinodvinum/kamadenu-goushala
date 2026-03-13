@@ -1,24 +1,9 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 
-const coreSeva = [
-  {
-    title: "Feed a Cow",
-    description: "Support daily feeding seva for cows under our care.",
-    href: "/donate",
-    cta: "Feed a Cow",
-  },
-  {
-    title: "Adopt a Cow",
-    description: "Support full monthly care and protection for a rescued cow.",
-    href: "/cows",
-    cta: "Adopt a Cow",
-  },
-];
-
 const sevaTypes = ["Gou Pooja", "Gou Graasa", "Gou Bandhu"];
 
-const offerings = [
+const poojaOfferings = [
   {
     id: "pooja-1",
     label: "Pooja 1",
@@ -26,16 +11,72 @@ const offerings = [
     amount: "Rs 500",
   },
   {
-    id: "pooja-2",
-    label: "Pooja 2",
+    id: "pooja-3a",
+    label: "Pooja 3",
     title: "Savatsa Gou Daana Seva",
     amount: "Rs 15000",
   },
   {
-    id: "pooja-3",
+    id: "pooja-3b",
     label: "Pooja 3",
     title: "Gou Pooja and Gou Graas Seva",
     amount: "Rs 4500",
+  },
+];
+
+const feedingOfferings = [
+  {
+    id: "feed-day",
+    title: "Feed 1 cow for 1 day",
+    amount: "Rs 100",
+  },
+  {
+    id: "feed-month",
+    title: "Feed 1 cow for 1 month",
+    amount: "Rs 3000",
+  },
+  {
+    id: "feed-year",
+    title: "Feed 1 cow for 1 year",
+    amount: "Rs 30000",
+  },
+  {
+    id: "graas-all",
+    title: "Feed graas for all cows of goushala for 1 day",
+    amount: "Rs 4000",
+  },
+  {
+    id: "cow-feed-all",
+    title: "Feed cow-feed for cows of goushala for 1 day",
+    amount: "Rs 1000",
+  },
+  {
+    id: "full-food-all",
+    title: "Feed full food for all cows of goushala for 1 day",
+    amount: "Rs 5000",
+  },
+];
+
+const bandhuOfferings = [
+  {
+    id: "vatsa-bandhu",
+    title: "Vatsa bandhu",
+    amount: "Rs 10000",
+  },
+  {
+    id: "dhenu-bandhu",
+    title: "Dhenu bandhu",
+    amount: "Rs 20000",
+  },
+  {
+    id: "savatsa-bandhu",
+    title: "Savatsa bandhu",
+    amount: "Rs 30000",
+  },
+  {
+    id: "nandhi-bandhu",
+    title: "Nandhi bandhu",
+    amount: "Rs 50000",
   },
 ];
 
@@ -57,56 +98,113 @@ Please guide me with payment details.`
     <div class="container">
       <h1 class="section-title">Seva Offerings</h1>
       <p class="section-intro">
-        Support Gau Mata through seva paths rooted in devotion and dharma.
+        Support Gau Mata through Gou Pooja, Gou Graasa, and Gou Bandhu seva offerings.
       </p>
-      <div class="grid">
-        {coreSeva.map((item) => (
-          <article class="card">
-            <div class="card-body">
-              <h3 class="card-title">{item.title}</h3>
-              <p>{item.description}</p>
-              <br />
-              <a href={item.href} class="btn btn-primary">{item.cta}</a>
-            </div>
-          </article>
-        ))}
-      </div>
 
-      <br />
-      <div class="grid">
-        {sevaTypes.map((item) => (
-          <article class="card">
-            <div class="card-body" style="text-align:center;">
-              <h3 class="card-title">{item}</h3>
-            </div>
-          </article>
-        ))}
+      <div class="seva-tab-nav">
+        <button type="button" class="btn btn-outline seva-tab-btn is-active" data-seva-tab="pooja">
+          {sevaTypes[0]}
+        </button>
+        <button type="button" class="btn btn-outline seva-tab-btn" data-seva-tab="graasa">
+          {sevaTypes[1]}
+        </button>
+        <button type="button" class="btn btn-outline seva-tab-btn" data-seva-tab="bandhu">
+          {sevaTypes[2]}
+        </button>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title">Pooja Seva Plans</h2>
-      <div class="grid">
-        {offerings.map((item) => (
-          <article class="card">
-            <div class="card-body">
-              <p style="font-weight:600; color:#6b8e23;">{item.label}</p>
-              <h3 class="card-title">{item.title}</h3>
-              <p style="font-weight:600; color:#e67e22;">{item.amount}</p>
-              <br />
-              <a
-                href={sevaWhatsAppLink(item.title, item.amount)}
-                target="_blank"
-                class="btn btn-primary"
-              >
-                WhatsApp
-              </a>
-            </div>
-          </article>
-        ))}
+      <div class="seva-panel is-active" data-seva-panel="pooja">
+        <h2 class="section-title">Gou Pooja Seva</h2>
+        <div class="grid">
+          {poojaOfferings.map((item) => (
+            <article class="card">
+              <div class="card-body">
+                <p style="font-weight:600; color:#6b8e23;">{item.label}</p>
+                <h3 class="card-title">{item.title}</h3>
+                <p style="font-weight:600; color:#e67e22;">{item.amount}</p>
+                <br />
+                <a
+                  href={sevaWhatsAppLink(item.title, item.amount)}
+                  target="_blank"
+                  class="btn btn-primary"
+                >
+                  WhatsApp
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div class="seva-panel" data-seva-panel="graasa" hidden>
+        <h2 class="section-title">Gou Graasa Seva</h2>
+        <div class="grid">
+          {feedingOfferings.map((item) => (
+            <article class="card">
+              <div class="card-body">
+                <h3 class="card-title">{item.title}</h3>
+                <p style="font-weight:600; color:#e67e22;">{item.amount}</p>
+                <br />
+                <a
+                  href={sevaWhatsAppLink(item.title, item.amount)}
+                  target="_blank"
+                  class="btn btn-primary"
+                >
+                  WhatsApp
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div class="seva-panel" data-seva-panel="bandhu" hidden>
+        <h2 class="section-title">Gou Bandhu Seva</h2>
+        <div class="grid">
+          {bandhuOfferings.map((item) => (
+            <article class="card">
+              <div class="card-body">
+                <h3 class="card-title">{item.title}</h3>
+                <p style="font-weight:600; color:#e67e22;">{item.amount}</p>
+                <br />
+                <a
+                  href={sevaWhatsAppLink(item.title, item.amount)}
+                  target="_blank"
+                  class="btn btn-primary"
+                >
+                  WhatsApp
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   </section>
+
+  <script is:inline>
+    const sevaButtons = document.querySelectorAll("[data-seva-tab]");
+    const sevaPanels = document.querySelectorAll("[data-seva-panel]");
+
+    function activateSevaTab(tabName) {
+      sevaButtons.forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.sevaTab === tabName);
+      });
+
+      sevaPanels.forEach((panel) => {
+        const isMatch = panel.dataset.sevaPanel === tabName;
+        panel.toggleAttribute("hidden", !isMatch);
+      });
+    }
+
+    sevaButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activateSevaTab(button.dataset.sevaTab);
+      });
+    });
+  </script>
 </MainLayout>

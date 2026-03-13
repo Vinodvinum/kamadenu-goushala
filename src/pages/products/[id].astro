@@ -1,0 +1,90 @@
+---
+export const prerender = true;
+
+import MainLayout from "../../layouts/MainLayout.astro";
+import { products } from "../../data/product/products.js";
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { id: product.id },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+
+if (!product) {
+  Astro.response.status = 404;
+}
+
+const whatsappLink = product
+  ? `https://wa.me/919448604890?text=${encodeURIComponent(
+      `Namaste Kamadenu Goushala,
+
+I want to order:
+Product: ${product.name}
+Price: ${product.price}
+
+Please guide me with payment and delivery.`
+    )}`
+  : "#";
+---
+
+<MainLayout title={product ? product.name : "Product Not Found"}>
+  {product ? (
+    <>
+      <section class="section breed-header-section">
+        <div class="container">
+          <h1 class="section-title">{product.name}</h1>
+          <img src={product.image} alt={product.name} class="breed-hero-image" />
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <h2 class="section-title">Product Details</h2>
+          <div class="grid">
+            <article class="card">
+              <div class="card-body">
+                <h3 class="card-title">Price</h3>
+                <p style="font-weight:600; color:#e67e22;">{product.price}</p>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-body">
+                <h3 class="card-title">Description</h3>
+                <p>{product.description}</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <h2 class="section-title">How to Make</h2>
+          <article class="card">
+            <div class="card-body">
+              <p>{product.process}</p>
+            </div>
+          </article>
+
+          <div class="cow-card-actions breed-action-buttons">
+            <a href={whatsappLink} target="_blank" class="btn btn-primary">WhatsApp</a>
+            <a href="/products" class="btn btn-outline">Know more products</a>
+          </div>
+        </div>
+      </section>
+    </>
+  ) : (
+    <section class="section">
+      <div class="container" style="text-align:center;">
+        <h1 class="section-title">Product Not Found</h1>
+        <p>The requested product page does not exist.</p>
+        <br />
+        <a href="/products" class="btn btn-outline">Back to Products</a>
+      </div>
+    </section>
+  )}
+</MainLayout>

@@ -1520,6 +1520,28 @@ width:100%;
 object-fit:cover;
 }
 
+.seva-tab-nav{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:12px;
+}
+
+button.seva-tab-btn{
+cursor:pointer;
+font-family:inherit;
+}
+
+button.seva-tab-btn.is-active{
+background:var(--primary);
+border-color:var(--primary);
+color:var(--white);
+}
+
+.seva-panel[hidden]{
+display:none !important;
+}
+
 
 main{
 margin-top:95px;
