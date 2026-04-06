@@ -66,6 +66,27 @@ const homepage = defineCollection({
   }),
 });
 
+const products = defineCollection({
+  type: "content",
+  schema: z.object({
+    id: z.string(),
+    name: z.string(),
+    price: z.string(),
+    image: z.string(),
+    description: z.string(),
+    process: z.string(),
+  }),
+});
+
+const imageLibrary = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    image: z.string(),
+    alt: z.string().optional(),
+  }),
+});
+
 export const collections = {
   events,
   news,
@@ -73,4 +94,6 @@ export const collections = {
   gallery,
   cows,
   homepage,
+  products,
+  "image-library": imageLibrary,
 };

@@ -106,3 +106,31 @@ collections:
             name: "featured_events"
             widget: "list"
             field: { label: "Event Slug", name: "event", widget: "string" }
+
+  - name: "products"
+    label: "Shop / Products"
+    folder: "src/content/products"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Product ID", name: "id", widget: "string", hint: "Example: product-001" }
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Price", name: "price", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Short Description", name: "description", widget: "text" }
+      - { label: "Making Process", name: "process", widget: "markdown" }
+      - { label: "Body", name: "body", widget: "markdown", required: false }
+
+  - name: "imageLibrary"
+    label: "Media / Image Library"
+    folder: "src/content/image-library"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Alt Text", name: "alt", widget: "string", required: false }

@@ -1,17 +1,30 @@
 ---
 export const prerender = true;
 
+import { getCollection } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
-import { products } from "../../data/product/products.js";
+
+type Product = {
+  id: string;
+  name: string;
+  price: string;
+  image: string;
+  description: string;
+  process: string;
+};
+
+const products = [...((await getCollection("products" as any)) as any[])]
+  .map((entry) => entry.data)
+  .map((entry) => entry as Product);
 
 export function getStaticPaths() {
   return products.map((product) => ({
     params: { id: product.id },
-    props: { product },
   }));
 }
 
-const { product } = Astro.props;
+const { id } = Astro.params;
+const product = id ? products.find((item) => item.id === id) : undefined;
 
 if (!product) {
   Astro.response.status = 404;
