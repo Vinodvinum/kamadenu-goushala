@@ -1,92 +1,59 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
 import { sanityFetch, urlFor } from "../../lib/sanityClient";
-import { POST_BY_SLUG_QUERY, ALL_POSTS_QUERY } from "../../lib/queries";
-import type { BlogPost } from "../../lib/types";
-import { PortableText } from "astro-portabletext";
-
-export async function getStaticPaths() {
-  const posts = await sanityFetch<BlogPost[]>({ query: ALL_POSTS_QUERY });
-  return posts.map((post) => ({
-    params: { slug: post.slug.current },
-  }));
-}
+import { NEWS_BY_SLUG_QUERY } from "../../lib/queries";
+import type { NewsItem } from "../../lib/types";
 
 const { slug } = Astro.params;
-let item: BlogPost | null = null;
+
+let newsItem: NewsItem | null = null;
 let error: string | null = null;
 
 try {
-  item = await sanityFetch<BlogPost>({ query: POST_BY_SLUG_QUERY, params: { slug } });
+  newsItem = await sanityFetch<NewsItem>({ query: NEWS_BY_SLUG_QUERY, params: { slug } });
 } catch (e) {
   error = "Failed to load news article.";
-  console.error("News detail page error:", e);
+  console.error("News error:", e);
 }
 
-if (!item && !error) {
-  return Astro.redirect("/404");
+if (!newsItem && !error) {
+  return Astro.redirect('/news');
 }
-
-const pageTitle = item?.title ?? "News Not Found";
 ---
 
-<MainLayout title={pageTitle}>
-  {error && (
-    <div class="error-banner" role="alert">
-      <p>{error}</p>
-    </div>
-  )}
-
-  {item ? (
-    <section class="section">
-      <div class="container">
-        <h1>{item.title}</h1>
-
-        <p style="font-size:14px; color:#777; margin-top:8px;">
-          {new Date(item.date).toLocaleDateString("en-IN", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          })}
-          {item.author && ` | By ${item.author}`}
-          {item.category && ` | ${item.category}`}
-        </p>
-
-        <br />
-
-        {item.coverImage && (
-          <img
-            src={urlFor(item.coverImage).width(800).height(450).url()}
-            alt={item.title}
-            class="detail-image"
-            loading="eager"
-          />
-        )}
-
-        <br /><br />
-
-        {item.excerpt && (
-          <p class="news-excerpt"><em>{item.excerpt}</em></p>
-        )}
-
-        {item.content && (
-          <div class="news-content">
-            <PortableText value={item.content} />
+<MainLayout title={newsItem?.title ?? 'News'} description={newsItem?.excerpt}>
+  <article class="max-w-4xl mx-auto px-4 py-12">
+    {error && (
+      <div class="bg-red-50 text-red-700 p-4 rounded-lg mb-6">{error}</div>
+    )}
+    {newsItem && (
+      <>
+        <header class="mb-8">
+          {newsItem.category && (
+            <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">{newsItem.category}</span>
+          )}
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mt-4 mb-4">{newsItem.title}</h1>
+          <div class="flex items-center gap-4 text-gray-500 text-sm">
+            {newsItem.author && <span>By {newsItem.author}</span>}
+            {newsItem.publishedAt && (
+              <span>{new Date(newsItem.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            )}
+          </div>
+        </header>
+        {newsItem.coverImage && (
+          <div class="mb-8 rounded-xl overflow-hidden">
+            <img src={urlFor(newsItem.coverImage).width(800).height(400).url()} alt={newsItem.title} class="w-full object-cover" />
           </div>
         )}
-
-        <br />
-        <a href="/news" class="btn btn-secondary">Back to News</a>
-      </div>
-    </section>
-  ) : (
-    <section class="section">
-      <div class="container">
-        <h1>News Not Found</h1>
-        <p>The requested article does not exist.</p>
-        <br />
-        <a href="/news" class="btn btn-primary">Back to News</a>
-      </div>
-    </section>
-  )}
+        {newsItem.excerpt && (
+          <div class="prose prose-lg max-w-none">
+            <p class="text-gray-600 text-lg leading-relaxed">{newsItem.excerpt}</p>
+          </div>
+        )}
+        <div class="mt-12">
+          <a href="/news" class="text-green-700 hover:text-green-900 font-medium">&larr; Back to News</a>
+        </div>
+      </>
+    )}
+  </article>
 </MainLayout>
