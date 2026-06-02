@@ -21,7 +21,7 @@ if (!cow && !error) {
 }
 ---
 
-<MainLayout title={cow?.name ?? 'Cow Profile'} description={cow?.description}>
+<MainLayout title={cow?.breedName ?? 'Cow Profile'} description={cow?.description}>
   <article class="max-w-4xl mx-auto px-4 py-12">
     {error && (
       <div class="bg-red-50 text-red-700 p-4 rounded-lg mb-6">{error}</div>
@@ -29,40 +29,49 @@ if (!cow && !error) {
     {cow && (
       <>
         <header class="mb-8">
-          {cow.adoptionStatus && (
-            <span class={`text-sm px-3 py-1 rounded-full mb-4 inline-block ${
-              cow.adoptionStatus === 'adopted' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
-            }`}>
-              {cow.adoptionStatus === 'adopted' ? 'Adopted' : 'Available for Adoption'}
-            </span>
+          {cow.isFeatured && (
+            <span class="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full mb-4 inline-block">Featured Breed</span>
           )}
-          <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mt-4 mb-4">{cow.name}</h1>
-          <div class="flex flex-wrap gap-6 text-gray-600">
-            {cow.breed && <span class="font-medium">Breed: {cow.breed}</span>}
-            {cow.age && <span>Age: {cow.age} years</span>}
-            {cow.weight && <span>Weight: {cow.weight} kg</span>}
-            {cow.dailyMilkYield && <span>Daily Milk: {cow.dailyMilkYield} litres</span>}
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mt-4 mb-4">{cow.breedName}</h1>
+          <div class="flex flex-wrap gap-4 text-gray-600">
+            {cow.origin && <span>Origin: {cow.origin}</span>}
+            {cow.milkYield && <span>Milk Yield: {cow.milkYield}</span>}
           </div>
         </header>
-        {cow.image && (
+        {cow.heroImage && (
           <div class="mb-8 rounded-xl overflow-hidden">
-            <img src={urlFor(cow.image).width(800).height(500).url()} alt={cow.name} class="w-full object-cover" />
+            <img src={urlFor(cow.heroImage).width(800).height(400).url()} alt={cow.breedName} class="w-full object-cover" />
           </div>
         )}
         {cow.description && (
-          <div class="prose prose-lg max-w-none">
+          <div class="prose prose-lg max-w-none mb-8">
             <p class="text-gray-600 text-lg leading-relaxed">{cow.description}</p>
           </div>
         )}
-        {cow.adoptionStatus === 'available' && (
-          <div class="mt-8 bg-green-50 rounded-xl p-6">
-            <h3 class="text-xl font-semibold text-green-800 mb-2">Adopt {cow.name}</h3>
-            <p class="text-green-700 mb-4">Help support {cow.name}'s care. Your adoption donation covers daily feeding, medical care, and shelter.</p>
-            <a href="/donate" class="bg-green-700 text-white px-6 py-3 rounded-lg hover:bg-green-800 transition-colors inline-block">Donate for Adoption</a>
+        {cow.characteristics && cow.characteristics.length > 0 && (
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Characteristics</h2>
+            <ul class="list-disc list-inside space-y-2">
+              {cow.characteristics.map((c: string) => (
+                <li class="text-gray-600">{c}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {cow.gallery && cow.gallery.length > 0 && (
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Gallery</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {cow.gallery.map((img: any) => (
+                <div class="rounded-lg overflow-hidden">
+                  <img src={urlFor(img).width(400).height(300).url()} alt={cow!.breedName} class="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
           </div>
         )}
         <div class="mt-12">
-          <a href="/cows" class="text-green-700 hover:text-green-900 font-medium">&larr; Back to Our Cows</a>
+          <a href="/cows" class="text-green-700 hover:text-green-900 font-medium">← Back to Our Cows</a>
         </div>
       </>
     )}
