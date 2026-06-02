@@ -8,4 +8,12 @@ export default defineConfig({
   server: {
     port: 4321,
   },
+  vite: {
+    define: {
+      'process.env': process.env,
+    },
+    optimizeDeps: {
+      include: ['@sanity/client', '@sanity/image-url'],
+    },
+  },
 });
