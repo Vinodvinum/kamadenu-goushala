@@ -1,36 +1,70 @@
 ---
-import { getCollection } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
+import { sanityFetch, urlFor } from "../../lib/sanityClient";
+import { ALL_POSTS_QUERY } from "../../lib/queries";
+import type { BlogPost } from "../../lib/types";
 
-const blogs = [...(await getCollection("blogs"))].sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime()
-);
+let blogs: BlogPost[] = [];
+let error: string | null = null;
+
+try {
+  blogs = await sanityFetch<BlogPost[]>({ query: ALL_POSTS_QUERY });
+} catch (e) {
+  error = "Failed to load blog posts. Please try again later.";
+  console.error("Blog page error:", e);
+}
 ---
 
-<MainLayout title="Blogs">
+<MainLayout title="Blog">
   <section class="section">
     <div class="container">
       <h1 class="section-title">Blogs</h1>
 
-      <div class="grid">
-        {blogs.map((blog) => (
-          <article class="card">
-            <img src={blog.data.cover_image} alt={blog.data.title} />
-            <div class="card-body">
-              <h2 class="card-title">{blog.data.title}</h2>
-              <p style="font-size:14px; color:#888;">
-                {blog.data.author} | {blog.data.date.toLocaleDateString("en-IN", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </p>
-              <br />
-              <a href={`/blog/${blog.slug}`} class="btn btn-outline">Read More</a>
-            </div>
-          </article>
-        ))}
-      </div>
+      {error && (
+        <div class="error-banner" role="alert">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {!error && blogs.length === 0 && (
+        <div class="empty-state">
+          <p>No blog posts found. Check back soon!</p>
+        </div>
+      )}
+
+      {blogs.length > 0 && (
+        <div class="grid">
+          {blogs.map((blog) => (
+            <article class="card">
+              {blog.coverImage ? (
+                <img
+                  src={urlFor(blog.coverImage).width(400).height(250).url()}
+                  alt={blog.title}
+                  loading="lazy"
+                />
+              ) : (
+                <div class="card-image-placeholder"></div>
+              )}
+              <div class="card-body">
+                <h2 class="card-title">{blog.title}</h2>
+                <p style="font-size:14px; color:#888;">
+                  {blog.author && `${blog.author} | `}
+                  {new Date(blog.date).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </p>
+                {blog.excerpt && (
+                  <p class="card-excerpt">{blog.excerpt}</p>
+                )}
+                <br />
+                <a href={`/blog/${blog.slug.current}`} class="btn btn-outline">Read More</a>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 </MainLayout>
