@@ -1,16 +1,16 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
 import { sanityFetch, urlFor } from "../../lib/sanityClient";
-import { NEWS_BY_SLUG_QUERY } from "../../lib/queries";
-import type { NewsItem } from "../../lib/types";
+import { POST_BY_SLUG_QUERY } from "../../lib/queries";
+import type { BlogPost } from "../../lib/types";
 
 const { slug } = Astro.params;
 
-let newsItem: NewsItem | null = null;
+let newsItem: BlogPost | null = null;
 let error: string | null = null;
 
 try {
-  newsItem = await sanityFetch<NewsItem>({ query: NEWS_BY_SLUG_QUERY, params: { slug } });
+  newsItem = await sanityFetch<BlogPost>({ query: POST_BY_SLUG_QUERY, params: { slug } });
 } catch (e) {
   error = "Failed to load news article.";
   console.error("News error:", e);
