@@ -1,38 +1,68 @@
 ---
-import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
+import { sanityFetch, urlFor } from "../lib/sanityClient";
+import { ALL_GALLERY_QUERY } from "../lib/queries";
+import type { GalleryAlbum } from "../lib/types";
 
-const gallerySets = await getCollection("gallery");
+let albums: GalleryAlbum[] = [];
+let error: string | null = null;
 
-function normalizeImage(item: string | { image: string }): string {
-  return typeof item === "string" ? item : item.image;
+try {
+  albums = await sanityFetch<GalleryAlbum[]>({ query: ALL_GALLERY_QUERY });
+} catch (e) {
+  error = "Failed to load gallery. Please try again later.";
+  console.error("Gallery page error:", e);
 }
+
+// Group images by category
+const categories = [...new Set(albums.map((a) => a.category).filter(Boolean))];
 ---
 
 <MainLayout title="Gallery">
   <section class="section">
     <div class="container">
       <h1 class="section-title">Gallery</h1>
+      <p class="section-subtitle">Moments from daily cow care, devotional activities, and events at our Goushala.</p>
 
-      <div class="grid">
-        {gallerySets.map((set) => (
-          <article class="card">
-            <div class="card-body">
-              <h2 class="card-title">{set.data.title}</h2>
-            </div>
+      {error && (
+        <div class="error-banner" role="alert">
+          <p>{error}</p>
+        </div>
+      )}
 
-            <div class="grid" style="padding: 0 20px 20px;">
-              {set.data.images.map((image, index) => (
-                <img
-                  src={normalizeImage(image)}
-                  alt={`${set.data.title} ${index + 1}`}
-                  class="breed-gallery-image"
-                />
-              ))}
+      {!error && albums.length === 0 && (
+        <div class="empty-state">
+          <p>No gallery albums found. Check back soon!</p>
+        </div>
+      )}
+
+      {albums.length > 0 && (
+        <div class="gallery-grid">
+          {albums.map((album) => (
+            <div class="gallery-album">
+              {album.coverImage ? (
+                <a href={`/gallery/${album.slug?.current}`} class="gallery-album__link">
+                  <img
+                    src={urlFor(album.coverImage).width(600).height(450).url()}
+                    alt={album.title}
+                    class="gallery-album__cover"
+                    loading="lazy"
+                  />
+                  <div class="gallery-album__overlay">
+                    <h3 class="gallery-album__title">{album.title}</h3>
+                    {album.category && <span class="gallery-album__category">{album.category}</span>}
+                    {album.images && <span class="gallery-album__count">{album.images.length} photos</span>}
+                  </div>
+                </a>
+              ) : (
+                <div class="gallery-album__placeholder">
+                  <h3>{album.title}</h3>
+                </div>
+              )}
             </div>
-          </article>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 </MainLayout>

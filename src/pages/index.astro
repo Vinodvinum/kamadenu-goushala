@@ -1,35 +1,25 @@
 ---
-import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
 import Hero from "../components/Hero.astro";
 import Stats from "../components/Stats.astro";
 import DonateSection from "../components/DonateSection.astro";
+import { sanityFetch, urlFor } from "../lib/sanityClient";
+import { FEATURED_EVENTS_QUERY, FEATURED_COWS_QUERY } from "../lib/queries";
+import type { Event, CowProfile } from "../lib/types";
 
-const [homepageEntries, events, cows] = await Promise.all([
-  getCollection("homepage"),
-  getCollection("events"),
-  getCollection("cows"),
-]);
+let featuredEvents: Event[] = [];
+let featuredBreeds: CowProfile[] = [];
+let error: string | null = null;
 
-const homepage = homepageEntries[0]?.data;
-
-const featuredEventSlugs = (homepage?.featured_events ?? []).map((item) =>
-  typeof item === "string" ? item : item.event
-);
-
-const featuredBreedSlugs = (homepage?.featured_breeds ?? []).map((item) =>
-  typeof item === "string" ? item : item.breed
-);
-
-const featuredEvents = featuredEventSlugs.length
-  ? events.filter((event) => featuredEventSlugs.includes(event.slug))
-  : [...events]
-      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-      .slice(0, 3);
-
-const featuredBreeds = featuredBreedSlugs.length
-  ? cows.filter((breed) => featuredBreedSlugs.includes(breed.slug))
-  : cows.slice(0, 5);
+try {
+  [featuredEvents, featuredBreeds] = await Promise.all([
+    sanityFetch<Event[]>({ query: FEATURED_EVENTS_QUERY }),
+    sanityFetch<CowProfile[]>({ query: FEATURED_COWS_QUERY }),
+  ]);
+} catch (e) {
+  error = "Failed to load some content. Please try again later.";
+  console.error("Homepage error:", e);
+}
 
 const activities = [
   {
@@ -74,76 +64,65 @@ const highlights = [
 ];
 ---
 
-<MainLayout title="Kamadenu Goushala">
-  <Hero
-    title={homepage?.hero_title}
-    description={homepage?.hero_description}
-    image={homepage?.hero_image}
-  />
-
+<MainLayout title="Kamadenu Goushala - Sacred Cow Sanctuary">
+  <Hero />
   <Stats />
 
-  <DonateSection />
-
-  <section class="section" style="background:#fff8e8;">
-    <div class="container">
-      <h2 class="section-title">Featured Events</h2>
-      <div class="grid">
-        {featuredEvents.map((event) => (
-          <article class="card">
-            <img src={event.data.cover_image} alt={event.data.title} />
-            <div class="card-body">
-              <h3 class="card-title">{event.data.title}</h3>
-              <p>{event.data.location}</p>
-              <p style="font-size:14px; color:#777;">
-                {event.data.date.toLocaleDateString("en-IN", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </p>
-              <br />
-              <a href={`/events/${event.slug}`} class="btn btn-primary">Know more</a>
-            </div>
-          </article>
-        ))}
-      </div>
+  {error && (
+    <div class="error-banner" role="alert">
+      <p>{error}</p>
     </div>
-  </section>
+  )}
+
+  {featuredEvents.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Featured Events</h2>
+        <div class="events-grid">
+          {featuredEvents.map((event) => (
+            <div class="event-card">
+              {event.coverImage ? (
+                <img
+                  src={urlFor(event.coverImage).width(400).height(250).url()}
+                  alt={event.title}
+                  class="event-card__image"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="event-card__image event-card__image--placeholder"></div>
+              )}
+              <div class="event-card__content">
+                <h3 class="event-card__title">{event.title}</h3>
+                <p class="event-card__location">{event.location}</p>
+                <p class="event-card__date">
+                  {new Date(event.date).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </p>
+                <a href={`/events/${event.slug.current}`} class="btn btn-primary">Know more</a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 
   <section class="section">
     <div class="container">
       <h2 class="section-title">Activities</h2>
-      <div class="grid">
+      <div class="activities-grid">
         {activities.map((item) => (
-          <article class="card">
-            <img src={item.image} alt={item.title} />
-            <div class="card-body">
-              <h3 class="card-title">{item.title}</h3>
-              <p>{item.description}</p>
-              <br />
-              <a href={item.href} class="btn btn-outline">Know more</a>
+          <div class="activity-card">
+            <img src={item.image} alt={item.title} class="activity-card__image" loading="lazy" />
+            <div class="activity-card__content">
+              <h3 class="activity-card__title">{item.title}</h3>
+              <p class="activity-card__description">{item.description}</p>
+              <a href={item.href} class="btn btn-secondary">Know more</a>
             </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section" style="background:#fff8e8;">
-    <div class="container">
-      <h2 class="section-title">Highlights</h2>
-      <div class="grid">
-        {highlights.map((item) => (
-          <article class="card">
-            <img src={item.image} alt={item.title} />
-            <div class="card-body">
-              <h3 class="card-title">{item.title}</h3>
-              <p>{item.description}</p>
-              <br />
-              <a href={item.href} class="btn btn-primary">Know more</a>
-            </div>
-          </article>
+          </div>
         ))}
       </div>
     </div>
@@ -151,21 +130,47 @@ const highlights = [
 
   <section class="section">
     <div class="container">
-      <h2 class="section-title">Indigenous Breeds Preview</h2>
-      <div class="breed-preview-grid">
-        {featuredBreeds.map((breed) => (
-          <article class="breed-card">
-            <a href={`/cows/${breed.slug}`}>
-              <img src={breed.data.hero_image} alt={breed.data.breed_name} />
-              <h3>{breed.data.breed_name}</h3>
-            </a>
-          </article>
+      <h2 class="section-title">Highlights</h2>
+      <div class="highlights-grid">
+        {highlights.map((item) => (
+          <div class="highlight-card">
+            <img src={item.image} alt={item.title} class="highlight-card__image" loading="lazy" />
+            <div class="highlight-card__content">
+              <h3 class="highlight-card__title">{item.title}</h3>
+              <p class="highlight-card__description">{item.description}</p>
+              <a href={item.href} class="btn btn-secondary">Know more</a>
+            </div>
+          </div>
         ))}
-      </div>
-
-      <div class="center-actions">
-        <a href="/cows" class="btn btn-primary">Explore Breeds</a>
       </div>
     </div>
   </section>
+
+  {featuredBreeds.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Indigenous Breeds Preview</h2>
+        <div class="cows-grid">
+          {featuredBreeds.map((breed) => (
+            <a href={`/cows/${breed.slug.current}`} class="cow-card">
+              {breed.heroImage ? (
+                <img
+                  src={urlFor(breed.heroImage).width(400).height(300).url()}
+                  alt={breed.breedName}
+                  class="cow-card__image"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="cow-card__image cow-card__image--placeholder"></div>
+              )}
+              <h3 class="cow-card__name">{breed.breedName}</h3>
+            </a>
+          ))}
+        </div>
+        <a href="/cows" class="btn btn-secondary">Explore Breeds</a>
+      </div>
+    </section>
+  )}
+
+  <DonateSection />
 </MainLayout>

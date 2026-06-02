@@ -1,49 +1,92 @@
 ---
-import { getEntry, render } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
+import { sanityFetch, urlFor } from "../../lib/sanityClient";
+import { POST_BY_SLUG_QUERY, ALL_POSTS_QUERY } from "../../lib/queries";
+import type { BlogPost } from "../../lib/types";
+import { PortableText } from "astro-portabletext";
 
-const { slug } = Astro.params;
-const blog = slug ? await getEntry("blogs", slug) : undefined;
-
-if (!blog) {
-  Astro.response.status = 404;
+export async function getStaticPaths() {
+  const posts = await sanityFetch<BlogPost[]>({ query: ALL_POSTS_QUERY });
+  return posts.map((post) => ({
+    params: { slug: post.slug.current },
+  }));
 }
 
-const pageTitle = blog?.data.title ?? "Blog Not Found";
-const rendered = blog ? await render(blog) : null;
-const Content = rendered?.Content;
+const { slug } = Astro.params;
+let blog: BlogPost | null = null;
+let error: string | null = null;
+
+try {
+  blog = await sanityFetch<BlogPost>({ query: POST_BY_SLUG_QUERY, params: { slug } });
+} catch (e) {
+  error = "Failed to load blog post.";
+  console.error("Blog detail page error:", e);
+}
+
+if (!blog && !error) {
+  return Astro.redirect("/404");
+}
+
+const pageTitle = blog?.title ?? "Blog Not Found";
 ---
 
 <MainLayout title={pageTitle}>
-  {blog && Content ? (
-  <section class="section">
-    <div class="container">
-      <h1>{blog.data.title}</h1>
-      <p style="font-size:14px; color:#888; margin-top:8px;">
-        {blog.data.author} | {blog.data.date.toLocaleDateString("en-IN", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-        })}
-      </p>
-
-      <br />
-
-      <img src={blog.data.cover_image} class="detail-image" alt={blog.data.title} />
-
-      <br /><br />
-
-      <Content />
+  {error && (
+    <div class="error-banner" role="alert">
+      <p>{error}</p>
     </div>
-  </section>
+  )}
+
+  {blog ? (
+    <section class="section">
+      <div class="container">
+        <h1>{blog.title}</h1>
+
+        <p style="font-size:14px; color:#888; margin-top:8px;">
+          {blog.author && `${blog.author} | `}
+          {new Date(blog.date).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })}
+          {blog.category && ` | ${blog.category}`}
+        </p>
+
+        <br />
+
+        {blog.coverImage && (
+          <img
+            src={urlFor(blog.coverImage).width(800).height(450).url()}
+            alt={blog.title}
+            class="detail-image"
+            loading="eager"
+          />
+        )}
+
+        <br /><br />
+
+        {blog.excerpt && (
+          <p class="blog-excerpt"><em>{blog.excerpt}</em></p>
+        )}
+
+        {blog.content && (
+          <div class="blog-content">
+            <PortableText value={blog.content} />
+          </div>
+        )}
+
+        <br />
+        <a href="/blog" class="btn btn-secondary">Back to Blog</a>
+      </div>
+    </section>
   ) : (
-  <section class="section">
-    <div class="container" style="text-align:center;">
-      <h1 class="section-title">Blog Not Found</h1>
-      <p>The requested blog article does not exist.</p>
-      <br />
-      <a href="/blog" class="btn btn-outline">Back to Blogs</a>
-    </div>
-  </section>
+    <section class="section">
+      <div class="container">
+        <h1>Blog Not Found</h1>
+        <p>The requested blog post does not exist.</p>
+        <br />
+        <a href="/blog" class="btn btn-primary">Back to Blog</a>
+      </div>
+    </section>
   )}
 </MainLayout>

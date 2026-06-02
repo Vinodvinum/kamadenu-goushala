@@ -7,17 +7,21 @@
     "dev": "astro dev",
     "dev:cms": "npx decap-server",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "sanity": "sanity dev",
+    "sanity:deploy": "sanity deploy"
   },
   "dependencies": {
     "@astrojs/vercel": "^9.0.4",
-    "astro": "^5.17.3",
-    "marked": "^17.0.4",
-    "prettier": "^3.0.0",
-    "prettier-plugin-astro": "^0.3.0",
-    "typescript": "^5.9.3"
+    "@sanity/client": "^6.22.0",
+    "@sanity/image-url": "^1.0.2",
+    "@sanity/vision": "^3.62.3",
+    "astro": "^5.1.7",
+    "astro-portabletext": "^0.12.0",
+    "sanity": "^3.62.3"
   },
   "devDependencies": {
-    "decap-server": "^3.5.2"
+    "@sanity/types": "^3.62.3",
+    "typescript": "^5.0.0"
   }
 }

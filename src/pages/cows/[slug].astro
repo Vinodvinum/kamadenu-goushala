@@ -1,112 +1,134 @@
 ---
-import { getEntry } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
-import { markdownToHtml } from "../../lib/markdown";
+import { sanityFetch, urlFor } from "../../lib/sanityClient";
+import { COW_BY_SLUG_QUERY, ALL_COWS_QUERY } from "../../lib/queries";
+import type { CowProfile } from "../../lib/types";
+import { PortableText } from "astro-portabletext";
 
-const { slug } = Astro.params;
-const breed = slug ? await getEntry("cows", slug) : undefined;
-
-if (!breed) {
-  Astro.response.status = 404;
+export async function getStaticPaths() {
+  const cows = await sanityFetch<CowProfile[]>({ query: ALL_COWS_QUERY });
+  return cows.map((cow) => ({
+    params: { slug: cow.slug.current },
+  }));
 }
 
-const breedName = breed?.data.breed_name ?? "Breed Not Found";
+const { slug } = Astro.params;
+let breed: CowProfile | null = null;
+let error: string | null = null;
+
+try {
+  breed = await sanityFetch<CowProfile>({ query: COW_BY_SLUG_QUERY, params: { slug } });
+} catch (e) {
+  error = "Failed to load breed details.";
+  console.error("Cow detail page error:", e);
+}
+
+if (!breed && !error) {
+  return Astro.redirect("/404");
+}
+
+const breedName = breed?.breedName ?? "Breed Not Found";
 
 const feedLink = `https://wa.me/919448604890?text=${encodeURIComponent(
-`Hello Kamadenu Goushala,
+  `Hello Kamadenu Goushala,
 
 I would like to support daily feeding seva for ${breedName} cows.`
 )}`;
 
 const adoptLink = `https://wa.me/919448604890?text=${encodeURIComponent(
-`Hello Kamadenu Goushala,
+  `Hello Kamadenu Goushala,
 
 I would like to adopt and support ${breedName} cows.`
 )}`;
-
-const characteristicsHtml = breed ? markdownToHtml(breed.data.characteristics) : "";
-
-function normalizeImage(item: string | { image: string }): string {
-  return typeof item === "string" ? item : item.image;
-}
 ---
 
 <MainLayout title={breedName}>
-{breed ? (
-<>
-<section class="section breed-header-section">
-<div class="container">
-<h1 class="section-title">{breed.data.breed_name}</h1>
-<img src={breed.data.hero_image} alt={breed.data.breed_name} class="breed-hero-image" />
-</div>
-</section>
+  {error && (
+    <div class="error-banner" role="alert">
+      <p>{error}</p>
+    </div>
+  )}
 
-<section class="section">
-<div class="container">
-<h2 class="section-title">Characteristics</h2>
+  {breed ? (
+    <>
+      <section class="section breed-header-section">
+        <div class="container">
+          <h1 class="breed-title">{breed.breedName}</h1>
 
-<div class="grid">
-<article class="card">
-<div class="card-body">
-<h3 class="card-title">Origin</h3>
-<p>{breed.data.origin}</p>
-</div>
-</article>
+          {breed.heroImage && (
+            <img
+              src={urlFor(breed.heroImage).width(800).height(500).url()}
+              alt={breed.breedName}
+              class="breed-hero-image"
+              loading="eager"
+            />
+          )}
 
-<article class="card">
-<div class="card-body">
-<h3 class="card-title">Physical Traits</h3>
-<div set:html={characteristicsHtml}></div>
-</div>
-</article>
+          <div class="breed-info">
+            <div class="breed-description">
+              <h2>About {breed.breedName}</h2>
+              <p>{breed.description}</p>
+            </div>
 
-<article class="card">
-<div class="card-body">
-<h3 class="card-title">Milk Quality</h3>
-<p>{breed.data.milk_quality}</p>
-</div>
-</article>
+            <div class="breed-characteristics">
+              <h2>Characteristics</h2>
 
-<article class="card">
-<div class="card-body">
-<h3 class="card-title">Agricultural Value</h3>
-<p>{breed.data.agricultural_use}</p>
-</div>
-</article>
-</div>
+              {breed.origin && (
+                <div class="characteristic-item">
+                  <h3>Origin</h3>
+                  <p>{breed.origin}</p>
+                </div>
+              )}
 
-<div class="cow-card-actions breed-action-buttons">
-<a href={feedLink} target="_blank" class="btn btn-primary">Feed a Cow</a>
-<a href={adoptLink} target="_blank" class="btn btn-outline">Adopt a Cow</a>
-</div>
-</div>
-</section>
+              {breed.milkYield && (
+                <div class="characteristic-item">
+                  <h3>Milk Yield</h3>
+                  <p>{breed.milkYield}</p>
+                </div>
+              )}
 
-<section class="section">
-<div class="container">
-<h2 class="section-title">Cow Gallery</h2>
-<div class="grid">
-{breed.data.gallery_images.map((image, index) => (
-<article class="card">
-<img
-src={normalizeImage(image)}
-alt={`${breed.data.breed_name} ${index + 1}`}
-class="breed-gallery-image"
-/>
-</article>
-))}
-</div>
-</div>
-</section>
-</>
-) : (
-<section class="section">
-<div class="container" style="text-align:center;">
-<h1 class="section-title">Breed Not Found</h1>
-<p>The requested breed page does not exist.</p>
-<br />
-<a href="/cows" class="btn btn-outline">Back to Breeds</a>
-</div>
-</section>
-)}
+              {breed.characteristics && (
+                <div class="characteristic-item">
+                  <h3>Physical Traits</h3>
+                  <PortableText value={breed.characteristics} />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div class="breed-actions">
+            <a href={feedLink} class="btn btn-primary" target="_blank" rel="noopener noreferrer">Feed a Cow</a>
+            <a href={adoptLink} class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Adopt a Cow</a>
+          </div>
+        </div>
+      </section>
+
+      {breed.gallery && breed.gallery.length > 0 && (
+        <section class="section">
+          <div class="container">
+            <h2 class="section-title">Cow Gallery</h2>
+            <div class="gallery-grid">
+              {breed.gallery.map((image, index) => (
+                <img
+                  src={urlFor(image).width(400).height(300).url()}
+                  alt={`${breed.breedName} ${index + 1}`}
+                  class="gallery-item"
+                  loading="lazy"
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+    </>
+  ) : (
+    <section class="section">
+      <div class="container">
+        <h1>Breed Not Found</h1>
+        <p>The requested breed page does not exist.</p>
+        <br />
+        <a href="/cows" class="btn btn-primary">Back to Breeds</a>
+      </div>
+    </section>
+  )}
 </MainLayout>

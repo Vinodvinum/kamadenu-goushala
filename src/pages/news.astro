@@ -1,36 +1,76 @@
 ---
-import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
+import { sanityFetch, urlFor } from "../lib/sanityClient";
+import { ALL_POSTS_QUERY } from "../lib/queries";
+import type { BlogPost } from "../lib/types";
 
-const newsItems = [...(await getCollection("news"))].sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime()
-);
+let posts: BlogPost[] = [];
+let error: string | null = null;
+
+try {
+  posts = await sanityFetch<BlogPost[]>({ query: ALL_POSTS_QUERY });
+} catch (e) {
+  error = "Failed to load news. Please try again later.";
+  console.error("News page error:", e);
+}
 ---
 
 <MainLayout title="News">
   <section class="section">
     <div class="container">
-      <h1 class="section-title">News</h1>
+      <h1 class="section-title">News & Updates</h1>
+      <p class="section-subtitle">Stay updated with the latest news, rescue stories, and milestones from Kamadenu Goushala.</p>
 
-      <div class="grid">
-        {newsItems.map((item) => (
-          <article class="card">
-            <img src={item.data.cover_image} alt={item.data.title} />
-            <div class="card-body">
-              <h2 class="card-title">{item.data.title}</h2>
-              <p style="font-size:14px; color:#777;">
-                {item.data.date.toLocaleDateString("en-IN", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </p>
-              <br />
-              <a href={`/news/${item.slug}`} class="btn btn-outline">Read Article</a>
-            </div>
-          </article>
-        ))}
-      </div>
+      {error && (
+        <div class="error-banner" role="alert">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {!error && posts.length === 0 && (
+        <div class="empty-state">
+          <p>No news articles found. Check back soon!</p>
+        </div>
+      )}
+
+      {posts.length > 0 && (
+        <div class="blog-grid">
+          {posts.map((post) => (
+            <article class="blog-card">
+              {post.coverImage ? (
+                <a href={`/blogs/${post.slug.current}`}>
+                  <img
+                    src={urlFor(post.coverImage).width(600).height(400).url()}
+                    alt={post.title}
+                    class="blog-card__image"
+                    loading="lazy"
+                  />
+                </a>
+              ) : (
+                <div class="blog-card__image blog-card__image--placeholder"></div>
+              )}
+              <div class="blog-card__body">
+                {post.category && <span class="blog-card__category">{post.category}</span>}
+                <h3 class="blog-card__title">
+                  <a href={`/blogs/${post.slug.current}`}>{post.title}</a>
+                </h3>
+                {post.excerpt && <p class="blog-card__excerpt">{post.excerpt}</p>}
+                <div class="blog-card__meta">
+                  {post.author && <span class="blog-card__author">{post.author}</span>}
+                  <span class="blog-card__date">
+                    {new Date(post.date).toLocaleDateString("en-IN", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
+                </div>
+                <a href={`/blogs/${post.slug.current}`} class="btn btn-primary">Read more</a>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 </MainLayout>

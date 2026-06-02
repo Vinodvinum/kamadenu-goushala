@@ -1,51 +1,108 @@
 ---
-import { getEntry } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
-import { markdownToHtml } from "../../lib/markdown";
+import { sanityFetch, urlFor } from "../../lib/sanityClient";
+import { EVENT_BY_SLUG_QUERY, ALL_EVENTS_QUERY } from "../../lib/queries";
+import type { Event } from "../../lib/types";
+import { PortableText } from "astro-portabletext";
 
-const { slug } = Astro.params;
-const event = slug ? await getEntry("events", slug) : undefined;
-
-if (!event) {
-  Astro.response.status = 404;
+export async function getStaticPaths() {
+  const events = await sanityFetch<Event[]>({ query: ALL_EVENTS_QUERY });
+  return events.map((event) => ({
+    params: { slug: event.slug.current },
+  }));
 }
 
-const pageTitle = event?.data.title ?? "Event Not Found";
-const descriptionHtml = event ? markdownToHtml(event.data.description) : "";
+const { slug } = Astro.params;
+let event: Event | null = null;
+let error: string | null = null;
+
+try {
+  event = await sanityFetch<Event>({ query: EVENT_BY_SLUG_QUERY, params: { slug } });
+} catch (e) {
+  error = "Failed to load event details.";
+  console.error("Event detail page error:", e);
+}
+
+if (!event && !error) {
+  return Astro.redirect("/404");
+}
+
+const pageTitle = event?.title ?? "Event Not Found";
 ---
 
 <MainLayout title={pageTitle}>
+  {error && (
+    <div class="error-banner" role="alert">
+      <p>{error}</p>
+    </div>
+  )}
+
   {event ? (
-  <section class="section">
-    <div class="container">
-      <h1>{event.data.title}</h1>
+    <section class="section">
+      <div class="container">
+        <h1>{event.title}</h1>
 
-      <p style="font-size:14px; color:#777; margin-top:8px;">
-        {event.data.date.toLocaleDateString("en-IN", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-        })}
-        | {event.data.location}
-      </p>
+        <p style="font-size:14px; color:#777; margin-top:8px;">
+          {new Date(event.date).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })}
+          {event.location && ` | ${event.location}`}
+        </p>
 
-      <br />
+        <br />
 
-      <img src={event.data.cover_image} alt={event.data.title} class="detail-image" />
+        {event.coverImage && (
+          <img
+            src={urlFor(event.coverImage).width(800).height(450).url()}
+            alt={event.title}
+            class="detail-image"
+            loading="eager"
+          />
+        )}
 
-      <br /><br />
+        <br /><br />
 
-      <div set:html={descriptionHtml}></div>
-    </div>
-  </section>
+        {event.description && typeof event.description === "string" ? (
+          <p>{event.description}</p>
+        ) : event.description ? (
+          <div class="event-content">
+            <PortableText value={event.description} />
+          </div>
+        ) : null}
+
+        {event.content && (
+          <div class="event-content">
+            <PortableText value={event.content} />
+          </div>
+        )}
+
+        {event.registrationLink && (
+          <div style="margin-top: 2rem;">
+            <a
+              href={event.registrationLink}
+              class="btn btn-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Register Now
+            </a>
+          </div>
+        )}
+
+        <br />
+        <a href="/events" class="btn btn-secondary">Back to Events</a>
+      </div>
+    </section>
   ) : (
-  <section class="section">
-    <div class="container" style="text-align:center;">
-      <h1 class="section-title">Event Not Found</h1>
-      <p>The requested event page does not exist.</p>
-      <br />
-      <a href="/events" class="btn btn-outline">Back to Events</a>
-    </div>
-  </section>
+    <section class="section">
+      <div class="container">
+        <h1>Event Not Found</h1>
+        <p>The requested event page does not exist.</p>
+        <br />
+        <a href="/events" class="btn btn-primary">Back to Events</a>
+      </div>
+    </section>
   )}
 </MainLayout>

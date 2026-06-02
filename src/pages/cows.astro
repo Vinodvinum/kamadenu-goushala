@@ -1,63 +1,61 @@
 ---
-import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
+import { sanityFetch, urlFor } from "../lib/sanityClient";
+import { ALL_COWS_QUERY } from "../lib/queries";
+import type { CowProfile } from "../lib/types";
 
-const breeds = await getCollection("cows");
+let cows: CowProfile[] = [];
+let error: string | null = null;
+
+try {
+  cows = await sanityFetch<CowProfile[]>({ query: ALL_COWS_QUERY });
+} catch (e) {
+  error = "Failed to load cow breeds. Please try again later.";
+  console.error("Cows page error:", e);
+}
 ---
 
 <MainLayout title="Indigenous Breeds">
+  <section class="section">
+    <div class="container">
+      <h1 class="section-title">Indigenous Cow Breeds</h1>
+      <p class="section-subtitle">Explore the sacred native breeds we care for at Kamadenu Goushala.</p>
 
-<section class="section">
+      {error && (
+        <div class="error-banner" role="alert">
+          <p>{error}</p>
+        </div>
+      )}
 
-<div class="container">
+      {!error && cows.length === 0 && (
+        <div class="empty-state">
+          <p>No breed profiles found. Check back soon!</p>
+        </div>
+      )}
 
-<h1 class="section-title">
-Indigenous Cow Breeds
-</h1>
-
-<p class="section-intro">
-Explore the sacred native breeds protected by Kamadenu Goushala.
-</p>
-
-<div class="breed-sections">
-
-{
-breeds.map((breed) => (
-
-<article class="card breed-section-card">
-
-<img src={breed.data.hero_image} alt={breed.data.breed_name}>
-
-<div class="card-body">
-
-<h2 class="card-title">
-{breed.data.breed_name}
-</h2>
-
-<p>
-<strong>Origin:</strong> {breed.data.origin}
-</p>
-
-<p>
-<strong>Milk Quality:</strong> {breed.data.milk_quality}
-</p>
-
-<br>
-
-<a href={`/cows/${breed.slug}`} class="btn btn-outline">Know more</a>
-
-</div>
-
-</article>
-
-))
-}
-
-</div>
-
-
-</div>
-
-</section>
-
+      {cows.length > 0 && (
+        <div class="cows-grid">
+          {cows.map((cow) => (
+            <a href={`/cows/${cow.slug.current}`} class="cow-card">
+              {cow.heroImage ? (
+                <img
+                  src={urlFor(cow.heroImage).width(500).height(400).url()}
+                  alt={cow.breedName}
+                  class="cow-card__image"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="cow-card__image cow-card__image--placeholder"></div>
+              )}
+              <div class="cow-card__body">
+                <h3 class="cow-card__name">{cow.breedName}</h3>
+                {cow.origin && <p class="cow-card__origin">Origin: {cow.origin}</p>}
+                {cow.description && <p class="cow-card__desc">{cow.description.slice(0, 100)}...</p>}
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
 </MainLayout>
