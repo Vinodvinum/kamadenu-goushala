@@ -1,108 +1,75 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
 import { sanityFetch, urlFor } from "../../lib/sanityClient";
-import { EVENT_BY_SLUG_QUERY, ALL_EVENTS_QUERY } from "../../lib/queries";
+import { EVENT_BY_SLUG_QUERY } from "../../lib/queries";
 import type { Event } from "../../lib/types";
-import { PortableText } from "astro-portabletext";
-
-export async function getStaticPaths() {
-  const events = await sanityFetch<Event[]>({ query: ALL_EVENTS_QUERY });
-  return events.map((event) => ({
-    params: { slug: event.slug.current },
-  }));
-}
 
 const { slug } = Astro.params;
+
 let event: Event | null = null;
 let error: string | null = null;
 
 try {
   event = await sanityFetch<Event>({ query: EVENT_BY_SLUG_QUERY, params: { slug } });
 } catch (e) {
-  error = "Failed to load event details.";
-  console.error("Event detail page error:", e);
+  error = "Failed to load event.";
+  console.error("Event error:", e);
 }
 
 if (!event && !error) {
-  return Astro.redirect("/404");
+  return Astro.redirect('/events');
 }
-
-const pageTitle = event?.title ?? "Event Not Found";
 ---
 
-<MainLayout title={pageTitle}>
-  {error && (
-    <div class="error-banner" role="alert">
-      <p>{error}</p>
-    </div>
-  )}
-
-  {event ? (
-    <section class="section">
-      <div class="container">
-        <h1>{event.title}</h1>
-
-        <p style="font-size:14px; color:#777; margin-top:8px;">
-          {new Date(event.date).toLocaleDateString("en-IN", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          })}
-          {event.location && ` | ${event.location}`}
-        </p>
-
-        <br />
-
+<MainLayout title={event?.title ?? 'Event'} description={event?.description}>
+  <article class="max-w-4xl mx-auto px-4 py-12">
+    {error && (
+      <div class="bg-red-50 text-red-700 p-4 rounded-lg mb-6">{error}</div>
+    )}
+    {event && (
+      <>
+        <header class="mb-8">
+          {event.isFeatured && (
+            <span class="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full mb-4 inline-block">Featured Event</span>
+          )}
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mt-4 mb-4">{event.title}</h1>
+          <div class="flex flex-wrap gap-4 text-gray-600">
+            {event.date && (
+              <div class="flex items-center gap-2">
+                <span>📅</span>
+                <span>{new Date(event.date).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              </div>
+            )}
+            {event.location && (
+              <div class="flex items-center gap-2">
+                <span>📍</span>
+                <span>{event.location}</span>
+              </div>
+            )}
+          </div>
+        </header>
         {event.coverImage && (
-          <img
-            src={urlFor(event.coverImage).width(800).height(450).url()}
-            alt={event.title}
-            class="detail-image"
-            loading="eager"
-          />
-        )}
-
-        <br /><br />
-
-        {event.description && typeof event.description === "string" ? (
-          <p>{event.description}</p>
-        ) : event.description ? (
-          <div class="event-content">
-            <PortableText value={event.description} />
-          </div>
-        ) : null}
-
-        {event.content && (
-          <div class="event-content">
-            <PortableText value={event.content} />
+          <div class="mb-8 rounded-xl overflow-hidden">
+            <img src={urlFor(event.coverImage).width(800).height(400).url()} alt={event.title} class="w-full object-cover" />
           </div>
         )}
-
+        {event.description && (
+          <div class="prose prose-lg max-w-none">
+            <p class="text-gray-600 text-lg leading-relaxed">{event.description}</p>
+          </div>
+        )}
         {event.registrationLink && (
-          <div style="margin-top: 2rem;">
-            <a
-              href={event.registrationLink}
-              class="btn btn-primary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+          <div class="mt-8">
+            <a href={event.registrationLink} target="_blank" rel="noopener noreferrer"
+               class="bg-green-700 text-white px-8 py-3 rounded-lg hover:bg-green-800 transition-colors inline-block">
               Register Now
             </a>
           </div>
         )}
-
-        <br />
-        <a href="/events" class="btn btn-secondary">Back to Events</a>
-      </div>
-    </section>
-  ) : (
-    <section class="section">
-      <div class="container">
-        <h1>Event Not Found</h1>
-        <p>The requested event page does not exist.</p>
-        <br />
-        <a href="/events" class="btn btn-primary">Back to Events</a>
-      </div>
-    </section>
-  )}
+        <div class="mt-12">
+          <a href="/events" class="text-green-700 hover:text-green-900 font-medium">&larr; Back to Events</a>
+        </div>
+      </>
+    )}
+  </article>
 </MainLayout>
