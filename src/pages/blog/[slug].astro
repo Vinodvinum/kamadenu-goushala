@@ -1,92 +1,62 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
 import { sanityFetch, urlFor } from "../../lib/sanityClient";
-import { POST_BY_SLUG_QUERY, ALL_POSTS_QUERY } from "../../lib/queries";
+import { POST_BY_SLUG_QUERY } from "../../lib/queries";
 import type { BlogPost } from "../../lib/types";
 import { PortableText } from "astro-portabletext";
 
-export async function getStaticPaths() {
-  const posts = await sanityFetch<BlogPost[]>({ query: ALL_POSTS_QUERY });
-  return posts.map((post) => ({
-    params: { slug: post.slug.current },
-  }));
-}
-
 const { slug } = Astro.params;
-let blog: BlogPost | null = null;
+
+let post: BlogPost | null = null;
 let error: string | null = null;
 
 try {
-  blog = await sanityFetch<BlogPost>({ query: POST_BY_SLUG_QUERY, params: { slug } });
+  post = await sanityFetch<BlogPost>({ query: POST_BY_SLUG_QUERY, params: { slug } });
 } catch (e) {
   error = "Failed to load blog post.";
-  console.error("Blog detail page error:", e);
+  console.error("Blog post error:", e);
 }
 
-if (!blog && !error) {
-  return Astro.redirect("/404");
+if (!post && !error) {
+  return Astro.redirect('/blog');
 }
-
-const pageTitle = blog?.title ?? "Blog Not Found";
 ---
 
-<MainLayout title={pageTitle}>
-  {error && (
-    <div class="error-banner" role="alert">
-      <p>{error}</p>
-    </div>
-  )}
-
-  {blog ? (
-    <section class="section">
-      <div class="container">
-        <h1>{blog.title}</h1>
-
-        <p style="font-size:14px; color:#888; margin-top:8px;">
-          {blog.author && `${blog.author} | `}
-          {new Date(blog.date).toLocaleDateString("en-IN", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          })}
-          {blog.category && ` | ${blog.category}`}
-        </p>
-
-        <br />
-
-        {blog.coverImage && (
-          <img
-            src={urlFor(blog.coverImage).width(800).height(450).url()}
-            alt={blog.title}
-            class="detail-image"
-            loading="eager"
-          />
-        )}
-
-        <br /><br />
-
-        {blog.excerpt && (
-          <p class="blog-excerpt"><em>{blog.excerpt}</em></p>
-        )}
-
-        {blog.content && (
-          <div class="blog-content">
-            <PortableText value={blog.content} />
+<MainLayout title={post?.title ?? 'Blog Post'} description={post?.excerpt}>
+  <article class="max-w-4xl mx-auto px-4 py-12">
+    {error && (
+      <div class="bg-red-50 text-red-700 p-4 rounded-lg mb-6">{error}</div>
+    )}
+    {post && (
+      <>
+        <header class="mb-8">
+          {post.category && (
+            <span class="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">{post.category}</span>
+          )}
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mt-4 mb-4">{post.title}</h1>
+          <div class="flex items-center gap-4 text-gray-500 text-sm">
+            {post.author && <span>By {post.author}</span>}
+            {post.publishedAt && (
+              <span>{new Date(post.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            )}
+          </div>
+        </header>
+        {post.coverImage && (
+          <div class="mb-8 rounded-xl overflow-hidden">
+            <img src={urlFor(post.coverImage).width(800).height(400).url()} alt={post.title} class="w-full object-cover" />
           </div>
         )}
-
-        <br />
-        <a href="/blog" class="btn btn-secondary">Back to Blog</a>
-      </div>
-    </section>
-  ) : (
-    <section class="section">
-      <div class="container">
-        <h1>Blog Not Found</h1>
-        <p>The requested blog post does not exist.</p>
-        <br />
-        <a href="/blog" class="btn btn-primary">Back to Blog</a>
-      </div>
-    </section>
-  )}
+        <div class="prose prose-lg max-w-none">
+          {post.body && post.body.length > 0 ? (
+            <PortableText value={post.body} />
+          ) : (
+            post.excerpt && <p>{post.excerpt}</p>
+          )}
+        </div>
+        <div class="mt-12">
+          <a href="/blog" class="text-green-700 hover:text-green-900 font-medium">&larr; Back to Blog</a>
+        </div>
+      </>
+    )}
+  </article>
 </MainLayout>
