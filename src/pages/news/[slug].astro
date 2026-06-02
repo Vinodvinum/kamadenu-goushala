@@ -1,49 +1,92 @@
 ---
-import { getEntry, render } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
+import { sanityFetch, urlFor } from "../../lib/sanityClient";
+import { POST_BY_SLUG_QUERY, ALL_POSTS_QUERY } from "../../lib/queries";
+import type { BlogPost } from "../../lib/types";
+import { PortableText } from "astro-portabletext";
 
-const { slug } = Astro.params;
-const item = slug ? await getEntry("news", slug) : undefined;
-
-if (!item) {
-  Astro.response.status = 404;
+export async function getStaticPaths() {
+  const posts = await sanityFetch<BlogPost[]>({ query: ALL_POSTS_QUERY });
+  return posts.map((post) => ({
+    params: { slug: post.slug.current },
+  }));
 }
 
-const pageTitle = item?.data.title ?? "News Not Found";
-const rendered = item ? await render(item) : null;
-const Content = rendered?.Content;
+const { slug } = Astro.params;
+let item: BlogPost | null = null;
+let error: string | null = null;
+
+try {
+  item = await sanityFetch<BlogPost>({ query: POST_BY_SLUG_QUERY, params: { slug } });
+} catch (e) {
+  error = "Failed to load news article.";
+  console.error("News detail page error:", e);
+}
+
+if (!item && !error) {
+  return Astro.redirect("/404");
+}
+
+const pageTitle = item?.title ?? "News Not Found";
 ---
 
 <MainLayout title={pageTitle}>
-  {item && Content ? (
-  <section class="section">
-    <div class="container">
-      <h1>{item.data.title}</h1>
-      <p style="font-size:14px; color:#777; margin-top:8px;">
-        {item.data.date.toLocaleDateString("en-IN", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-        })}
-      </p>
-
-      <br />
-
-      <img src={item.data.cover_image} alt={item.data.title} class="detail-image" />
-
-      <br /><br />
-
-      <Content />
+  {error && (
+    <div class="error-banner" role="alert">
+      <p>{error}</p>
     </div>
-  </section>
+  )}
+
+  {item ? (
+    <section class="section">
+      <div class="container">
+        <h1>{item.title}</h1>
+
+        <p style="font-size:14px; color:#777; margin-top:8px;">
+          {new Date(item.date).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })}
+          {item.author && ` | By ${item.author}`}
+          {item.category && ` | ${item.category}`}
+        </p>
+
+        <br />
+
+        {item.coverImage && (
+          <img
+            src={urlFor(item.coverImage).width(800).height(450).url()}
+            alt={item.title}
+            class="detail-image"
+            loading="eager"
+          />
+        )}
+
+        <br /><br />
+
+        {item.excerpt && (
+          <p class="news-excerpt"><em>{item.excerpt}</em></p>
+        )}
+
+        {item.content && (
+          <div class="news-content">
+            <PortableText value={item.content} />
+          </div>
+        )}
+
+        <br />
+        <a href="/news" class="btn btn-secondary">Back to News</a>
+      </div>
+    </section>
   ) : (
-  <section class="section">
-    <div class="container" style="text-align:center;">
-      <h1 class="section-title">News Not Found</h1>
-      <p>The requested news article does not exist.</p>
-      <br />
-      <a href="/news" class="btn btn-outline">Back to News</a>
-    </div>
-  </section>
+    <section class="section">
+      <div class="container">
+        <h1>News Not Found</h1>
+        <p>The requested article does not exist.</p>
+        <br />
+        <a href="/news" class="btn btn-primary">Back to News</a>
+      </div>
+    </section>
   )}
 </MainLayout>
